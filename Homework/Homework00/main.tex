@@ -1,0 +1,69 @@
+\documentclass[12pt]{article}
+\usepackage{amsthm}
+\usepackage{libertine}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{multicol}
+\usepackage[shortlabels]{enumitem}
+\usepackage{siunitx}
+\usepackage{cancel}
+\usepackage{graphicx}
+\usepackage{pgfplots}
+\usepackage{listings}
+\usepackage{tikz}
+\usepackage{hyperref}
+\usetikzlibrary{automata, positioning, arrows}
+\tikzset{node distance=2.5cm, % Minimum distance between two nodes. Change if necessary.
+every state/.style={ % Sets the properties for each state
+semithick,
+fill=gray!10},
+initial text={}, % No label on start arrow
+double distance=2pt, % Adjust appearance of accept states
+every edge/.style={ % Sets the properties for each transition
+draw,
+->, > = stealth, % Makes edges directed with bold arrowheads
+shorten > = 1pt,
+auto,
+semithick}}
+\let\epsilon\varepsilon
+
+
+\pgfplotsset{width=10cm,compat=1.9}
+\usepgfplotslibrary{external}
+\tikzexternalize
+
+\newcommand{\class}{CS552 - Game Design}           
+\newcommand{\examnum}{Homework 00: Game Analysis}      
+\newcommand{\examdate}{06/08/2026}        
+\newcommand{\timelimit}{}             
+
+
+
+
+\begin{document} 
+\pagestyle{plain}
+\thispagestyle{empty}
+
+\noindent
+\begin{tabular*}{\textwidth}{l @{\extracolsep{\fill}} r @{\extracolsep{6pt}} l}
+ \textbf{\class} & \textbf{Name:} & \textit{Taylor Belcher}\\       
+\textbf{\examnum} &&\\
+\textbf{\examdate} &&\\
+\end{tabular*}\\
+\rule[2ex]{\textwidth}{2pt}
+% ---
+The first video game I remember playing is Duck Hunt on the NES. I was probably 5 or 6 years old and at a family friend's house. (This would be the early 1990s.) We couldn't afford systems at home and so I didn't really play games unless I was at a friend's house. When my dad's work purchased him a computer, I would sit in his office and play Silpheed. I could never beat the second stage. When I was 10 or so, my dad's coworker gave us his old SNES, but not any games. We had to rent those from the local Family Video. I rented StarFox over and over. The original StarFox game for the SNES, as you probably know, had three paths of varying difficulties. I would play the easiest path every time, but it wasn't until I was roughly 12 and we had purchased that used copy of StarFox from that Family Video that I finally beat it. It was the first video game I ever beat, as far as I can remember.\\
+
+\noindent The best game I have ever played is I think Portal 2. I would not call it my favorite game (although I do love it), but I think it may be the best game. This could just be recency bias as I replayed the game all the way through for the 2nd time earlier this month, but I was reminded of just how good it is. The writing is not at all serious, but I still find it funny and compelling. I quote the Cave Johnson Lemons rant to my students sometimes. What I think makes Portal 2 the best game I have ever played is the progressive and intentional level design. Over and over Valve introduces a new puzzle mechanic in a way that requires no real explicit instruction and then stacks those mechanics. When I compare the levels I have made for puzzle games, Portal 2 very much makes me feel the amateur. The atmosphere in the subterranean levels of Aperture genuinely gave me the creeps the first time I played it, and Valve did it with only soundtrack and set design. I kept expecting to be attacked by something awful, but of course it isn't that kind of game. \\
+
+\noindent The worst game I have ever played is just as difficult to answer. You stop playing games you don't enjoy, right? I've abandoned plenty of games I didn't like or just wasn't into or couldn't figure out, but I'd like to answer this with a game that I finished: Megaman Battle Network 4: Red Sun for the GameBoy Advance. The original Megaman Battle Network was my favorite game for most of my pre-teen and teenage years. I absolutely loved it. It was a real-time hybrid action RPG with a collection system. MMBN4 was a huge disappointment to me, my brother, and my friend when it came out. (I was 14.) Previous installments of the action RPG featured long stories with multiple cyber-dungeons culminating in boss battles. This game featured a very long tournament. You have to play it multiple times to really ``beat" it. It was half a game compared to the first three installments in the series and I recall feeling cheated. \\
+
+\noindent My brother and I have always enjoyed making things together and playing games together. Around the same time we were given the SNES we created our own comic strip characters: an old man and his cat. Later when we were older we were given an old PC and my brother found The Games Factory, by Click Team. It allowed us to make games without learning to code by creating events in spreadsheets. The very first games that we made were about our comic strip characters. We scanned hand drawings and animated them to make platformer games. My brother was a large driver of this activity. I was interested in making games with him, but he was much deeper into it then I was and would teach me things that he learned. Often I ended up designing levels for games he made. \href{https://cloopadoop.itch.io/oldmanclayton-save-fdk?password=shobibbobolobeth}{Here is an itch.io link from my brother to one of the first games we made together.}\\
+
+\noindent The first game I made on my own was an ``Escape The Titanic" platformer as a final project for my 9th grade American history class. I used The Games Factory platform. (I don't think I have copies of it anymore, I lost the floppy disk I brought to school a long time ago.) Then I mostly stopped making games and really my lost interest in computer science. I kept \emph{playing} plenty of video games, but I got absorbed in high school, college, etc. My brother continued to pursue becoming an indie game developer and from time to time I would design levels for his games, which is how I ended up contributing a significant number of levels to his release \href{https://jollycrouton.com/splotches}{Splotches on the PC and Nintendo Switch}.\\
+
+\noindent Recently I found myself interested in computers again and I am pursuing this PhD in Computer Science. Making games is mostly just a hobby for me, but I do teach Intro to Game Design as part of my job as a CS Instructor at GSSM. I'd like to gain more skills in that role, keep helping my brother, and keep making indie games for my own enjoyment. I am very comfortable making 2D retro games from scratch using PICO-8, but I am woefully lacking in the 3D department and it is a long-term goal of mine to write a game and engine completely from scratch in Python or C++. For this course, my goal is to learn how to develop 3D games in Godot well enough that I can teach talented high school students how to do it and also not sound like the complete amateur that I am when I talk to them about game design concepts. 
+
+\end{document}
+
