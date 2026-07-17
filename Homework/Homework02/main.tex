@@ -1,0 +1,318 @@
+%% bare_jrnl.tex
+%% V1.4b
+%% 2015/08/26
+%% by Michael Shell
+%% see http://www.michaelshell.org/
+%% for current contact information.
+%%
+%% This is a skeleton file demonstrating the use of IEEEtran.cls
+%% (requires IEEEtran.cls version 1.8b or later) with an IEEE
+%% journal paper.
+%%
+%% Support sites:
+%% http://www.michaelshell.org/tex/ieeetran/
+%% http://www.ctan.org/pkg/ieeetran
+%% and
+%% http://www.ieee.org/
+
+%%*************************************************************************
+%% Legal Notice:
+%% This code is offered as-is without any warranty either expressed or
+%% implied; without even the implied warranty of MERCHANTABILITY or
+%% FITNESS FOR A PARTICULAR PURPOSE! 
+%% User assumes all risk.
+%% In no event shall the IEEE or any contributor to this code be liable for
+%% any damages or losses, including, but not limited to, incidental,
+%% consequential, or any other damages, resulting from the use or misuse
+%% of any information contained here.
+%%
+%% All comments are the opinions of their respective authors and are not
+%% necessarily endorsed by the IEEE.
+%%
+%% This work is distributed under the LaTeX Project Public License (LPPL)
+%% ( http://www.latex-project.org/ ) version 1.3, and may be freely used,
+%% distributed and modified. A copy of the LPPL, version 1.3, is included
+%% in the base LaTeX documentation of all distributions of LaTeX released
+%% 2003/12/01 or later.
+%% Retain all contribution notices and credits.
+%% ** Modified files should be clearly indicated as such, including  **
+%% ** renaming them and changing author support contact information. **
+%%*************************************************************************
+
+
+% *** Authors should verify (and, if needed, correct) their LaTeX system  ***
+% *** with the testflow diagnostic prior to trusting their LaTeX platform ***
+% *** with production work. The IEEE's font choices and paper sizes can   ***
+% *** trigger bugs that do not appear when using other class files.       ***                          ***
+% The testflow support page is at:
+% http://www.michaelshell.org/tex/testflow/
+
+
+
+\documentclass[journal]{IEEEtran}
+%
+% If IEEEtran.cls has not been installed into the LaTeX system files,
+% manually specify the path to it like:
+% \documentclass[journal]{../sty/IEEEtran}
+
+
+
+
+
+% Some very useful LaTeX packages include:
+% (uncomment the ones you want to load)
+
+
+% *** MISC UTILITY PACKAGES ***
+%
+%\usepackage{ifpdf}
+% Heiko Oberdiek's ifpdf.sty is very useful if you need conditional
+% compilation based on whether the output is pdf or dvi.
+% usage:
+% \ifpdf
+%   % pdf code
+% \else
+%   % dvi code
+% \fi
+% The latest version of ifpdf.sty can be obtained from:
+% http://www.ctan.org/pkg/ifpdf
+% Also, note that IEEEtran.cls V1.7 and later provides a builtin
+% \ifCLASSINFOpdf conditional that works the same way.
+% When switching from latex to pdflatex and vice-versa, the compiler may
+% have to be run twice to clear warning/error messages.
+
+
+
+
+
+
+% *** CITATION PACKAGES ***
+%
+%\usepackage{cite}
+% cite.sty was written by Donald Arseneau
+% V1.6 and later of IEEEtran pre-defines the format of the cite.sty package
+% \cite{} output to follow that of the IEEE. Loading the cite package will
+% result in citation numbers being automatically sorted and properly
+% "compressed/ranged". e.g., [1], [9], [2], [7], [5], [6] without using
+% cite.sty will become [1], [2], [5]--[7], [9] using cite.sty. cite.sty's
+% \cite will automatically add leading space, if needed. Use cite.sty's
+% noadjust option (cite.sty V3.8 and later) if you want to turn this off
+% such as if a citation ever needs to be enclosed in parenthesis.
+% cite.sty is already installed on most LaTeX systems. Be sure and use
+% version 5.0 (2009-03-20) and later if using hyperref.sty.
+% The latest version can be obtained at:
+% http://www.ctan.org/pkg/cite
+% The documentation is contained in the cite.sty file itself.
+
+% *** graphics and diagram packages ***
+
+\usepackage{graphicx}
+\usepackage{tikz}
+
+\usetikzlibrary{
+    arrows.meta,
+    positioning,
+    shapes.geometric
+}
+
+\newcommand{\scenenumber}[1]{%
+    {\scriptsize\textit{#1}}%
+}
+
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+
+\begin{document}
+%
+% paper title
+% Titles are generally capitalized except for words such as a, an, and, as,
+% at, but, by, for, in, nor, of, on, or, the, to and up, which are usually
+% not capitalized unless they are the first or last word of the title.
+% Linebreaks \\ can be used within to get better formatting as desired.
+% Do not put math or special symbols in the title.
+\title{Fleet Progress Report}
+\author{by Taylor Belcher \\ CSCE552 Game Development, Dr. JJ Shepherd}
+\maketitle
+
+\tableofcontents 
+
+\section{General Progress Update}
+
+Summer camps at GSSM have now ended and I am done with the AI in Education conference that I was a speaker at. \emph{I have no other obligations the next two weeks except making the game for this course.} I anticipate that I will still accomplish all necessary tasks by their deadlines. A list of tasks I did this week is below. Project commit history at https://github.com/hotdogontology/CSCE552/commits/main/
+\begin{enumerate}
+    \item Completed tutorial on GDScript.
+    \item Completed tutorial on making 2D games in Godot.
+    \item Made stand-in ship model in Blockbench.
+    \item Started and abandoned tutorial on making 3D games in Godot in favor of beginning work on game.
+\end{enumerate}
+
+
+
+\section{Features Currently Implemented}
+
+I have been able to create a basic 3D scene, import my model, and have it move around with the camera in approximately the correct place. It is very much NOT a game right now, but I am happy with my progress given that I have never made a 3D game before or used Godot and my other obligations so far.
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=\columnwidth]{gameplay.png}
+    \caption{screenshot of current game}
+    \label{fig:game-play}
+\end{figure}
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=\columnwidth]{maineditor.png}
+    \caption{current 3d editor view of main scene}
+    \label{fig:editor-godot}
+\end{figure}
+
+
+\begin{enumerate}
+    \item A basic scene tree has been established in the project. Current scenes are
+    \begin{enumerate}
+        \item Main
+        \item Player
+        \item Trench
+        \item TrenchScraper (Building)
+        \end{enumerate}
+    \item A player ship is drawn within a trench scene.
+    \item The player can move the ship in four directions.
+\end{enumerate}
+\section{Features To Be Implemented}
+All other features as described in the GDD submitted last week. Essentially, now that I understand Godot a little, I need to actually make the game.
+\begin{enumerate}
+    \item Smoother player movement that feels like a ship flying
+    \item Shooting weapons
+    \item Collisions with objects and enemy weapons
+    \item Health and shield systems
+    \item Loadout scene and systems
+    \item Enemy and obstacle spawn and movement
+    \item Random level generation and on-rail levels
+    \item Galaxy map scene
+    \item All menus
+\end{enumerate}
+\section{Features Removed}
+
+I still plan to make the game as described in the GDD to at least the minimum specifications.
+\section{Problems Encountered}
+
+\begin{enumerate}
+    \item The largest obstacle for me this past week was time. I had obligations for the AI conference from 9 AM - 5 PM Monday - Thursday and had to work in the evenings. \textbf{But now I have the next two weeks completely free.}
+    \item Audacity is audio-editing software, but as far as I can tell, it cannot allow me to write music. I did not realize this. I will need to download additional tracking software. I am looking into Reaper and NES extensions to write some chiptune music as well as investigating if I can export sounds or music from PICO-8's built-in tracker. 
+    \item My triangle spaceship model is missing coloring on some faces and I am not sure why. It was my first blockbench model ever, so I probably just colored the mesh incorrectly. The triangle model is a placeholder for the final model, so this is mainly a non-issue. 
+    \item Related to the above, making 3D art in Blockbench is very difficult! But I am sticking to basic shapes to manage.
+    \item Godot makes scene management and built-in features as described in lecture very manageable, but I am finding that style of organization for writing a game far more un-intuitive than coding everything like I have in PICO-8 games. My sense of ``\emph{here is what code you should write to implement that feature}" that I have developed is often unrelated to the new sense of ``\emph{here is the node type that you should create to implement that feature and what characteristics you should edit}" that Godot requires. That is, the learning curve is steeper than I anticipated. However, the tutorials helped and I am getting the hang of it. 
+    \item I can get the player to move up, down, left, right, but the movement does not \emph{feel} like a spaceship moving yet. I need to implement the nose tipping up and down and the ship banking. I also need to have the camera probably move slightly with the ship. I will need to do some research into how to get a better game feel for player controls.
+\end{enumerate}
+
+\section{Team Tasks}
+
+\begin{itemize}
+
+    \item \textbf{Taylor, July 17--20:}
+    Improve player movement, add collisions, enemies, obstacles, weapons, and loadout system.
+
+    \item \textbf{Taylor, July 20--22:}
+    Create MWE in trench tutorial scene with randomly generated enemies. Create at least one on-rails hand-crafted level to test the PathFollow node. 
+
+    \item \textbf{Taylor, July 22--24:}
+    Create set-up for all randomly generated scenes, create galaxy map and mission selection system.
+
+    \item \textbf{Taylor, July 24--29:}
+    Create as many on-rails levels as possible. 
+
+    \item \textbf{Taylor, July 29--31:}
+    Finishing details, playtest and revise, submit game.
+
+    \item \textbf{Clayton, July 20--31:}
+    Create art and music as necessary to assist Taylor. Playtest and give feedback.
+
+\end{itemize}
+
+
+
+
+\section{Programming Tasks}
+
+\begin{itemize}
+
+    \item \textbf{Taylor, July 17--20:}
+    Improved player movement, collisions signals, enemy movement and behavior, build loadout system.
+
+    \item \textbf{Taylor, July 20--22:}
+    Generating enemies and obstacles for randomly generated levels. Figure out how the path follow node interacts with player input.  
+
+    \item \textbf{Taylor, July 22--24:}
+    Mission select and galaxy map logic.
+
+    \item \textbf{Taylor, July 24--29:}
+    Create as many on-rails levels as possible. 
+
+    \item \textbf{Taylor, July 29--31:}
+    Finishing details, playtest and revise, submit game.
+
+\end{itemize}
+
+\section{Art Tasks}
+
+Minimum art assets we need to create. These are all assigned to Taylor by default. Clayton will assist where he can.
+
+\begin{itemize}
+    \item \textbf{Taylor, July 17--22:}
+    \begin{itemize}
+    \item Enemy Spaceship 1 Model
+    \item Enemy Spaceship 2 Model
+    \item Enemy Spaceship 3 Model
+    \item Enemy Turret 1 Model
+    \item Laser
+    \item Bomb
+    \item Building 1 Model
+    \item Asteroid Model
+    \item Asteroid Field Icon
+    \end{itemize}
+    \item \textbf{Taylor, July 22--24:}
+    \begin{itemize}
+    \item Space Station Model
+    \item Space Station Icon
+    \item Planet Icon
+    \item Planet Background
+    \item Improved Player Spaceship Model
+    \item Carrier Ship Model
+    \item Battery Loadout Icon
+    \item Shield Generator Loadout Icon
+    \item Missile Loadout Icon
+    \item Loadout Bay Puzzle
+    \item Galaxy Map
+    \end{itemize}
+
+\end{itemize}
+
+\section{Testing Tasks}
+
+\begin{itemize}
+
+    \item \textbf{Taylor, July 17--20:}
+    Test movement, firing, collisions, energy, shields, armor, pickups, and loadout validation as they are implemented.
+
+    \item \textbf{Taylor, July 20--22:}
+    Test all scene transitions and verify that fleet and campaign data persist.
+
+    \item \textbf{Taylor, July 22--24:}
+    Test victory, failure, retreat, replacement-fighter, save, load, and game-end conditions.
+
+    \item \textbf{Taylor, July 24--29:}
+    Conduct playtests focused on controls, objective clarity, interface readability, mission length, and difficulty. 
+    
+    \item \textbf{Taylor, July 29--31:}
+    Perform a final test and correct crashes, soft locks, and
+    progression blockers.
+
+    \item \textbf{Clayton, July 20--31:}
+    Conduct playtests focused on controls, objective clarity, interface readability, mission length, and difficulty.
+    
+
+\end{itemize}
+
+\end{document}
