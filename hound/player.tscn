@@ -1,8 +1,16 @@
-[gd_scene load_steps=2 format=3 uid="uid://dwnwtc5vqs7xi"]
+[gd_scene load_steps=4 format=3 uid="uid://dwnwtc5vqs7xi"]
 
 [ext_resource type="ArrayMesh" uid="uid://d058srxq6bkb0" path="res://blockbench/starship1.obj" id="1_4flbx"]
+[ext_resource type="Script" uid="uid://86glxucyisx5" path="res://player.gd" id="1_onrkg"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_4flbx"]
 
 [node name="Player" type="Area3D"]
+script = ExtResource("1_onrkg")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="ShipModel" type="MeshInstance3D" parent="."]
 mesh = ExtResource("1_4flbx")
+
+[node name="CockpitHitBox" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, -0.00512123, 0.779444, 0.127453)
+shape = SubResource("BoxShape3D_4flbx")

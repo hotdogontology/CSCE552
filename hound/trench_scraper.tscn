@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://b7wx7i5pcbbfd"]
+
+[ext_resource type="Script" uid="uid://deh4hq45n7fxq" path="res://trench_scraper.gd" id="1_itgv5"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_dymv5"]
+size = Vector3(2, 5, 2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vao2m"]
+size = Vector3(2, 5, 2)
+
+[node name="TrenchScraper" type="Area3D"]
+script = ExtResource("1_itgv5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
+mesh = SubResource("BoxMesh_dymv5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
+shape = SubResource("BoxShape3D_vao2m")

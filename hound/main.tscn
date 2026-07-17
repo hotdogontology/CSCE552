@@ -1,14 +1,18 @@
-[gd_scene load_steps=2 format=3 uid="uid://lvduepqic8sb"]
+[gd_scene load_steps=3 format=3 uid="uid://lvduepqic8sb"]
 
 [ext_resource type="PackedScene" uid="uid://dwnwtc5vqs7xi" path="res://player.tscn" id="1_ig7tw"]
+[ext_resource type="PackedScene" uid="uid://djkj0jhaau2i8" path="res://trench_segment.tscn" id="2_0xm2m"]
 
 [node name="Main" type="Node3D"]
 
 [node name="Player" parent="." instance=ExtResource("1_ig7tw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0669414, 0)
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.084305, 0.819791, 0.517577)
+transform = Transform3D(1, 0, 0, 0, 0.956554, 0.291554, 0, -0.291554, 0.956554, -0.00951095, 1.14284, 1.0276)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -0.529934, 0.848039, 0, -0.848039, -0.529934, 0.0569733, 1.85404, -0.68399)
+transform = Transform3D(1, 0, 0, 0, 0.0722287, 0.997388, 0, -0.997388, 0.0722287, 0, 8, 2)
+
+[node name="TutorialTrench" parent="." instance=ExtResource("2_0xm2m")]
+
+[node name="BuildingTimer" type="Timer" parent="."]
