@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://dwnwtc5vqs7xi"]
+
+[ext_resource type="ArrayMesh" uid="uid://d058srxq6bkb0" path="res://blockbench/starship1.obj" id="1_4flbx"]
+
+[node name="Player" type="Area3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = ExtResource("1_4flbx")
