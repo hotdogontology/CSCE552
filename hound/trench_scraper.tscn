@@ -8,7 +8,8 @@ size = Vector3(2, 5, 2)
 [sub_resource type="BoxShape3D" id="BoxShape3D_vao2m"]
 size = Vector3(2, 5, 2)
 
-[node name="TrenchScraper" type="Area3D"]
+[node name="TrenchScraper" type="Area3D" groups=["obstacle"]]
+collision_layer = 2
 script = ExtResource("1_itgv5")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
