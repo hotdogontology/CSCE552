@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://bcqeeok3siohr"]
+[gd_scene load_steps=6 format=3 uid="uid://bcqeeok3siohr"]
 
 [ext_resource type="Script" uid="uid://cfp6vb8s1guit" path="res://laser.gd" id="1_laser"]
+[ext_resource type="AudioStream" uid="uid://b200i57766sxa" path="res://sound effects/explosion.wav" id="2_6vqwg"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_laser"]
 shading_mode = 0
@@ -23,3 +24,6 @@ mesh = SubResource("BoxMesh_laser")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_laser")
+
+[node name="Explosion" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("2_6vqwg")

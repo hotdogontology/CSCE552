@@ -2,17 +2,13 @@ extends Area3D
 
 const LASER_SCENE := preload("res://laser.tscn")
 
-@export var speed := 2.0
+@export var speed := 2.3
 @export var acceleration := 10.0
 @export var deceleration := 14.0
 @export var horizontal_limit := 2.0
 @export var vertical_minimum := -2.0
 @export var vertical_maximum := 2.0
-@export var boost_speed := 3.0
-@export var brake_speed := 2.0
-@export var longitudinal_acceleration := 12.0
-@export var forward_limit := -1.5
-@export var rear_limit := 0.6
+@export_range(0.0, 200.0, 1.0) var screen_edge_margin := 48.0
 @export_range(0.0, 90.0, 1.0) var maximum_bank_degrees := 35.0
 @export_range(0.0, 90.0, 1.0) var maximum_pitch_degrees := 20.0
 @export var rotation_speed := 8.0
@@ -24,7 +20,6 @@ const LASER_SCENE := preload("res://laser.tscn")
 @onready var hitbox: CollisionShape3D = $CockpitHitBox
 
 var velocity := Vector2.ZERO
-var longitudinal_velocity := 0.0
 var model_rest_rotation := Vector3.ZERO
 var visual_roll := 0.0
 var barrel_roll_direction := 0.0
@@ -62,14 +57,13 @@ func _process(delta: float) -> void:
 		vertical_minimum,
 		vertical_maximum
 	)
+	_keep_player_on_screen()
 
 	# Stop pushing against an edge so the ship responds immediately when turning away.
 	if is_equal_approx(absf(position.x), horizontal_limit):
 		velocity.x = 0.0
 	if is_equal_approx(position.y, vertical_minimum) or is_equal_approx(position.y, vertical_maximum):
 		velocity.y = 0.0
-
-	_update_longitudinal_movement(delta)
 
 	var rotation_weight := 1.0 - exp(-rotation_speed * delta)
 	var target_pitch := model_rest_rotation.x \
@@ -89,6 +83,47 @@ func _process(delta: float) -> void:
 	hitbox.rotation.z = visual_roll
 
 
+func _keep_player_on_screen() -> void:
+	var viewport := get_viewport()
+	var camera := viewport.get_camera_3d()
+	if camera == null or camera.is_position_behind(global_position):
+		return
+
+	var viewport_size := viewport.get_visible_rect().size
+	var usable_margin := minf(
+		screen_edge_margin,
+		minf(viewport_size.x, viewport_size.y) * 0.45
+	)
+	var screen_position := camera.unproject_position(global_position)
+	var clamped_screen_position := Vector2(
+		clampf(screen_position.x, usable_margin, viewport_size.x - usable_margin),
+		clampf(screen_position.y, usable_margin, viewport_size.y - usable_margin)
+	)
+	if screen_position.is_equal_approx(clamped_screen_position):
+		return
+
+	var ray_origin := camera.project_ray_origin(clamped_screen_position)
+	var ray_direction := camera.project_ray_normal(clamped_screen_position)
+	if is_zero_approx(ray_direction.z):
+		return
+
+	var distance_to_movement_plane := (
+		global_position.z - ray_origin.z
+	) / ray_direction.z
+	var corrected_position := (
+		ray_origin + ray_direction * distance_to_movement_plane
+	)
+	if not is_equal_approx(screen_position.x, clamped_screen_position.x):
+		velocity.x = 0.0
+	if not is_equal_approx(screen_position.y, clamped_screen_position.y):
+		velocity.y = 0.0
+	global_position = Vector3(
+		corrected_position.x,
+		corrected_position.y,
+		global_position.z
+	)
+
+
 func _handle_firing(delta: float) -> void:
 	fire_cooldown = maxf(fire_cooldown - delta, 0.0)
 	if not Input.is_action_pressed("fire") or fire_cooldown > 0.0:
@@ -101,32 +136,9 @@ func _handle_firing(delta: float) -> void:
 
 func _fire_laser(muzzle_offset: Vector3) -> void:
 	var laser := LASER_SCENE.instantiate() as Area3D
+	$LaserSound.play()
 	get_tree().current_scene.add_child(laser)
 	laser.global_position = ship_model.to_global(muzzle_offset)
-
-
-func _update_longitudinal_movement(delta: float) -> void:
-	var target_speed := 0.0
-	var boosting := Input.is_action_pressed("boost")
-	var braking := Input.is_action_pressed("brake")
-	if boosting and not braking:
-		target_speed -= boost_speed
-	elif braking and not boosting:
-		target_speed += brake_speed
-
-	longitudinal_velocity = move_toward(
-		longitudinal_velocity,
-		target_speed,
-		longitudinal_acceleration * delta
-	)
-	position.z = clampf(
-		position.z + longitudinal_velocity * delta,
-		forward_limit,
-		rear_limit
-	)
-
-	if is_equal_approx(position.z, forward_limit) or is_equal_approx(position.z, rear_limit):
-		longitudinal_velocity = 0.0
 
 
 func _handle_maneuver_input() -> void:

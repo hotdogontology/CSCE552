@@ -1,12 +1,13 @@
-[gd_scene load_steps=4 format=3 uid="uid://dwnwtc5vqs7xi"]
+[gd_scene load_steps=5 format=3 uid="uid://dwnwtc5vqs7xi"]
 
 [ext_resource type="ArrayMesh" uid="uid://d058srxq6bkb0" path="res://blockbench/starship1.obj" id="1_4flbx"]
 [ext_resource type="Script" uid="uid://86glxucyisx5" path="res://player.gd" id="1_onrkg"]
+[ext_resource type="AudioStream" uid="uid://bs02wwu0244tq" path="res://sound effects/fire_laser.wav" id="3_i3pqv"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_4flbx"]
 size = Vector3(0.28, 0.06, 0.42)
 
-[node name="Player" type="Area3D"]
+[node name="Player" type="Area3D" groups=["player"]]
 collision_mask = 2
 script = ExtResource("1_onrkg")
 
@@ -15,3 +16,6 @@ mesh = ExtResource("1_4flbx")
 
 [node name="CockpitHitBox" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_4flbx")
+
+[node name="LaserSound" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("3_i3pqv")

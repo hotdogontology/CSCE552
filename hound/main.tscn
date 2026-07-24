@@ -1,16 +1,38 @@
-[gd_scene load_steps=4 format=3 uid="uid://lvduepqic8sb"]
+[gd_scene load_steps=9 format=3 uid="uid://lvduepqic8sb"]
 
 [ext_resource type="PackedScene" uid="uid://dwnwtc5vqs7xi" path="res://player.tscn" id="1_ig7tw"]
 [ext_resource type="PackedScene" uid="uid://djkj0jhaau2i8" path="res://trench_segment.tscn" id="2_0xm2m"]
 [ext_resource type="Script" uid="uid://chrylrtcdqp" path="res://main.gd" id="3_main"]
+[ext_resource type="Script" uid="uid://cxcf4a01osucj" path="res://camera_follow.gd" id="4_camera"]
+[ext_resource type="Shader" uid="uid://bsadnnmw73pfm" path="res://starfield.gdshader" id="5_starfield"]
+
+[sub_resource type="Environment" id="Environment_space"]
+background_mode = 1
+background_color = Color(0.002, 0.004, 0.012, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_starfield"]
+render_priority = 0
+shader = ExtResource("5_starfield")
+
+[sub_resource type="SphereMesh" id="SphereMesh_starfield"]
+material = SubResource("ShaderMaterial_starfield")
+radius = 500.0
+height = 1000.0
 
 [node name="Main" type="Node3D"]
 script = ExtResource("3_main")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_space")
+
+[node name="Starfield" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_starfield")
 
 [node name="Player" parent="." instance=ExtResource("1_ig7tw")]
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.956554, 0.291554, 0, -0.291554, 0.956554, -0.00951095, 0.500372, 1.0276)
+script = ExtResource("4_camera")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.0722287, 0.997388, 0, -0.997388, 0.0722287, 0, 8, 2)
