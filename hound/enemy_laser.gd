@@ -35,7 +35,7 @@ func _physics_process(delta: float) -> void:
 	)
 	if collision_fractions[0] < 1.0:
 		global_position += movement * collision_fractions[0]
-		_hit_player()
+		_hit_player(get_tree().get_first_node_in_group("player") as Area3D)
 		return
 
 	global_position += movement
@@ -46,10 +46,10 @@ func _physics_process(delta: float) -> void:
 
 func _on_area_entered(area: Area3D) -> void:
 	if area.is_in_group("player"):
-		_hit_player()
+		_hit_player(area)
 
 
-func _hit_player() -> void:
+func _hit_player(player: Area3D) -> void:
 	if has_hit:
 		return
 
@@ -57,5 +57,6 @@ func _hit_player() -> void:
 	set_physics_process(false)
 	set_deferred("monitoring", false)
 	hitbox.set_deferred("disabled", true)
+	if player != null and player.has_method("receive_enemy_hit"):
+		player.call("receive_enemy_hit", global_position)
 	queue_free()
-	get_tree().call_deferred("reload_current_scene")

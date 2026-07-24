@@ -48,87 +48,78 @@ one_shot = true
 
 [node name="StatusHUD" type="Control" parent="HUD"]
 layout_mode = 3
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 36.0
-offset_top = -94.0
-offset_right = -36.0
-offset_bottom = -20.0
-grow_horizontal = 2
-grow_vertical = 0
+anchors_preset = 0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 390.0
+offset_bottom = 186.0
 mouse_filter = 2
 script = ExtResource("7_status_hud")
 
-[node name="Readouts" type="HBoxContainer" parent="HUD/StatusHUD"]
+[node name="StatusPanel" type="PanelContainer" parent="HUD/StatusHUD"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 48
-alignment = 1
 
-[node name="ShieldColumn" type="Control" parent="HUD/StatusHUD/Readouts"]
-custom_minimum_size = Vector2(280, 0)
+[node name="MarginContainer" type="MarginContainer" parent="HUD/StatusHUD/StatusPanel"]
 layout_mode = 2
-size_flags_horizontal = 3
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 8
 
-[node name="ShieldReadout" type="VBoxContainer" parent="HUD/StatusHUD/Readouts/ShieldColumn"]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-alignment = 1
+[node name="Readouts" type="VBoxContainer" parent="HUD/StatusHUD/StatusPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 5
 
-[node name="ShieldLabel" type="Label" parent="HUD/StatusHUD/Readouts/ShieldColumn/ShieldReadout"]
+[node name="PowerLabel" type="Label" parent="HUD/StatusHUD/StatusPanel/MarginContainer/Readouts"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.1, 0.55, 1, 1)
-theme_override_font_sizes/font_size = 20
-text = "SHIELDS DOWN"
-horizontal_alignment = 1
+text = "Available Power"
 
-[node name="PowerReadout" type="VBoxContainer" parent="HUD/StatusHUD/Readouts"]
-custom_minimum_size = Vector2(280, 0)
-layout_mode = 2
-size_flags_horizontal = 3
-alignment = 1
-
-[node name="PowerLabel" type="Label" parent="HUD/StatusHUD/Readouts/PowerReadout"]
+[node name="PowerBar" type="ProgressBar" parent="HUD/StatusHUD/StatusPanel/MarginContainer/Readouts"]
 unique_name_in_owner = true
-layout_mode = 2
-text = "POWER"
-horizontal_alignment = 1
-
-[node name="PowerBar" type="ProgressBar" parent="HUD/StatusHUD/Readouts/PowerReadout"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(280, 18)
+custom_minimum_size = Vector2(0, 14)
 layout_mode = 2
 show_percentage = false
 
-[node name="StatusReadout" type="VBoxContainer" parent="HUD/StatusHUD/Readouts"]
-custom_minimum_size = Vector2(280, 0)
+[node name="ShieldReadout" type="VBoxContainer" parent="HUD/StatusHUD/StatusPanel/MarginContainer/Readouts"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="ShieldLabel" type="Label" parent="HUD/StatusHUD/StatusPanel/MarginContainer/Readouts/ShieldReadout"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Shields"
+
+[node name="ShieldBar" type="ProgressBar" parent="HUD/StatusHUD/StatusPanel/MarginContainer/Readouts/ShieldReadout"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 14)
+layout_mode = 2
+show_percentage = false
+
+[node name="LaserLabel" type="Label" parent="HUD/StatusHUD/StatusPanel/MarginContainer/Readouts"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Lasers"
+
+[node name="ShipRow" type="HBoxContainer" parent="HUD/StatusHUD/StatusPanel/MarginContainer/Readouts"]
+layout_mode = 2
+
+[node name="ShipLabel" type="Label" parent="HUD/StatusHUD/StatusPanel/MarginContainer/Readouts/ShipRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-alignment = 1
+text = "Ship Status"
 
-[node name="ShipLabel" type="Label" parent="HUD/StatusHUD/Readouts/StatusReadout"]
-layout_mode = 2
-text = "STATUS"
-horizontal_alignment = 1
-
-[node name="ShipIcon" type="TextureRect" parent="HUD/StatusHUD/Readouts/StatusReadout"]
+[node name="ShipIcon" type="TextureRect" parent="HUD/StatusHUD/StatusPanel/MarginContainer/Readouts/ShipRow"]
 unique_name_in_owner = true
 texture_filter = 1
-custom_minimum_size = Vector2(48, 48)
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-size_flags_horizontal = 4
 expand_mode = 3
 stretch_mode = 5
 

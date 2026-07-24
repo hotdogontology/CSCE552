@@ -1,6 +1,9 @@
 extends Area3D
 
+signal runtime_status_changed(status: Dictionary)
+
 const LASER_SCENE := preload("res://laser.tscn")
+const BAY_ORDER := ["left_wing", "fuselage", "right_wing"]
 
 @export var speed := 2.3
 @export var acceleration := 10.0
@@ -14,7 +17,11 @@ const LASER_SCENE := preload("res://laser.tscn")
 @export var rotation_speed := 8.0
 @export_range(0.1, 1.0, 0.05) var double_tap_window := 0.3
 @export_range(0.1, 2.0, 0.05) var barrel_roll_duration := 0.6
+@export var barrel_roll_lateral_speed := 3.2
+@export var barrel_roll_acceleration := 18.0
 @export_range(0.05, 1.0, 0.05) var fire_interval := 0.2
+@export_range(0.0, 20.0, 0.1) var power_recharge_per_second := 2.0
+@export_range(0.0, 10.0, 0.1) var power_cost_per_laser_component := 1.0
 
 @onready var ship_model: MeshInstance3D = $ShipModel
 @onready var hitbox: CollisionShape3D = $CockpitHitBox
@@ -27,13 +34,23 @@ var barrel_roll_time := 0.0
 var last_left_tap := -10.0
 var last_right_tap := -10.0
 var fire_cooldown := 0.0
+var runtime_components_by_bay: Dictionary = {}
+var laser_mounts: Array[Dictionary] = []
+var left_wing_intact := true
+var right_wing_intact := true
+var shield_component_count := 0
+var maximum_power := 0.0
+var current_power := 0.0
+var ship_destroyed := false
 
 func _ready() -> void:
 	model_rest_rotation = ship_model.rotation
 	visual_roll = model_rest_rotation.z
+	_apply_saved_loadout()
 
 
 func _process(delta: float) -> void:
+	_recharge_power(delta)
 	_handle_maneuver_input()
 	_handle_firing(delta)
 
@@ -44,7 +61,12 @@ func _process(delta: float) -> void:
 	input_direction.y *= -1.0
 
 	var target_velocity := input_direction * speed
+	var barrel_roll_movement := _get_barrel_roll_movement_direction()
+	if barrel_roll_movement != 0.0:
+		target_velocity.x = barrel_roll_movement * barrel_roll_lateral_speed
 	var response := acceleration if input_direction != Vector2.ZERO else deceleration
+	if barrel_roll_movement != 0.0:
+		response = barrel_roll_acceleration
 	velocity = velocity.move_toward(target_velocity, response * delta)
 
 	position.x = clampf(
@@ -81,6 +103,16 @@ func _process(delta: float) -> void:
 	# dimension becomes its screen-space width instead of leaving a wide box behind.
 	hitbox.rotation.x = ship_model.rotation.x
 	hitbox.rotation.z = visual_roll
+
+
+func _recharge_power(delta: float) -> void:
+	if ship_destroyed or current_power >= maximum_power:
+		return
+	current_power = minf(
+		current_power + power_recharge_per_second * delta,
+		maximum_power
+	)
+	_emit_runtime_status()
 
 
 func _keep_player_on_screen() -> void:
@@ -129,16 +161,257 @@ func _handle_firing(delta: float) -> void:
 	if not Input.is_action_pressed("fire") or fire_cooldown > 0.0:
 		return
 
-	_fire_laser(Vector3(-0.1, 0.0, -0.25))
-	_fire_laser(Vector3(0.1, 0.0, -0.25))
+	var firing_cost := (
+		float(_get_total_laser_component_count())
+		* power_cost_per_laser_component
+	)
+	if laser_mounts.is_empty() or current_power < firing_cost:
+		return
+
+	current_power = maxf(current_power - firing_cost, 0.0)
+	for laser_mount in laser_mounts:
+		_fire_laser(laser_mount)
 	fire_cooldown = fire_interval
+	_emit_runtime_status()
 
 
-func _fire_laser(muzzle_offset: Vector3) -> void:
+func _fire_laser(laser_mount: Dictionary) -> void:
 	var laser := LASER_SCENE.instantiate() as Area3D
 	$LaserSound.play()
 	get_tree().current_scene.add_child(laser)
+	var muzzle_offset: Vector3 = laser_mount["muzzle_offset"]
 	laser.global_position = ship_model.to_global(muzzle_offset)
+	laser.call("set_direction", get_aim_direction())
+	laser.call("set_damage", int(laser_mount["level"]))
+
+
+func get_aim_direction() -> Vector3:
+	return -ship_model.global_transform.basis.z.normalized()
+
+
+func _apply_saved_loadout() -> void:
+	var state := get_node_or_null("/root/LoadoutState")
+	if state == null or not state.get("has_saved_loadout"):
+		_apply_default_runtime_loadout()
+		return
+
+	runtime_components_by_bay = state.get(
+		"components_by_bay"
+	).duplicate(true)
+	_recalculate_runtime_loadout(false)
+
+
+func _apply_default_runtime_loadout() -> void:
+	runtime_components_by_bay = {
+		"left_wing": [
+			{"component_type": "laser", "occupied_cells": [0, 4, 8, 12]}
+		],
+		"fuselage": [],
+		"right_wing": [
+			{"component_type": "laser", "occupied_cells": [3, 7, 11, 15]}
+		]
+	}
+	for bay_id in ["left_wing", "right_wing"]:
+		for cell_index in range(16):
+			if cell_index % 4 == (0 if bay_id == "left_wing" else 3):
+				continue
+			runtime_components_by_bay[bay_id].append({
+				"component_type": "battery",
+				"occupied_cells": [cell_index]
+			})
+	_recalculate_runtime_loadout(false)
+
+
+func _recalculate_runtime_loadout(preserve_current_power: bool = true) -> void:
+	var previous_power := current_power
+	maximum_power = 0.0
+	shield_component_count = 0
+	laser_mounts.clear()
+
+	for bay_id in BAY_ORDER:
+		if not _is_bay_intact(bay_id):
+			continue
+		var components: Array = runtime_components_by_bay.get(bay_id, [])
+		maximum_power += _calculate_bay_power(bay_id, components)
+		var bay_laser_count := 0
+		for component in components:
+			match component["component_type"]:
+				"shield":
+					shield_component_count += 1
+				"laser":
+					bay_laser_count += 1
+		if bay_laser_count > 0:
+			laser_mounts.append({
+				"bay": bay_id,
+				"level": bay_laser_count,
+				"muzzle_offset": _get_bay_muzzle_offset(bay_id)
+			})
+
+	current_power = (
+		minf(previous_power, maximum_power)
+		if preserve_current_power
+		else maximum_power
+	)
+	_emit_runtime_status()
+
+
+func _calculate_bay_power(bay_id: String, components: Array) -> float:
+	var battery_cells: Dictionary = {}
+	for component in components:
+		if component["component_type"] != "battery":
+			continue
+		for cell_index in component["occupied_cells"]:
+			battery_cells[int(cell_index)] = true
+
+	var battery_count := battery_cells.size()
+	if battery_count <= 1:
+		return float(battery_count)
+
+	var group_count := _count_battery_groups(
+		battery_cells,
+		2 if bay_id == "fuselage" else 4
+	)
+	var multiplier := (
+		2.0
+		- float(group_count - 1) / float(battery_count - 1)
+	)
+	return float(battery_count) * multiplier
+
+
+func _count_battery_groups(
+	battery_cells: Dictionary,
+	column_count: int
+) -> int:
+	var unvisited := battery_cells.duplicate()
+	var group_count := 0
+	while not unvisited.is_empty():
+		group_count += 1
+		var starting_cell := int(unvisited.keys()[0])
+		var pending_cells: Array[int] = [starting_cell]
+		unvisited.erase(starting_cell)
+
+		while not pending_cells.is_empty():
+			var cell_index: int = int(pending_cells.pop_back())
+			var column: int = cell_index % column_count
+			var neighbors: Array[int] = [
+				cell_index - column_count,
+				cell_index + column_count
+			]
+			if column > 0:
+				neighbors.append(cell_index - 1)
+			if column < column_count - 1:
+				neighbors.append(cell_index + 1)
+
+			for neighbor in neighbors:
+				if not unvisited.has(neighbor):
+					continue
+				unvisited.erase(neighbor)
+				pending_cells.append(neighbor)
+	return group_count
+
+
+func _get_total_laser_component_count() -> int:
+	var total := 0
+	for bay_id in BAY_ORDER:
+		if not _is_bay_intact(bay_id):
+			continue
+		for component in runtime_components_by_bay.get(bay_id, []):
+			if component["component_type"] == "laser":
+				total += 1
+	return total
+
+
+func _get_bay_muzzle_offset(bay_id: String) -> Vector3:
+	match bay_id:
+		"left_wing":
+			return Vector3(-0.12, 0.0, -0.25)
+		"right_wing":
+			return Vector3(0.12, 0.0, -0.25)
+		_:
+			return Vector3(0.0, 0.0, -0.25)
+
+
+func _is_bay_intact(bay_id: String) -> bool:
+	if bay_id == "left_wing":
+		return left_wing_intact
+	if bay_id == "right_wing":
+		return right_wing_intact
+	return true
+
+
+func receive_enemy_hit(hit_position: Vector3) -> void:
+	if ship_destroyed:
+		return
+
+	var shield_hit_cost := _get_shield_hit_cost()
+	if shield_component_count > 0 and current_power >= shield_hit_cost:
+		current_power = maxf(current_power - shield_hit_cost, 0.0)
+		_emit_runtime_status()
+		return
+
+	if not left_wing_intact and not right_wing_intact:
+		_destroy_ship()
+		return
+
+	var hit_left_side := hit_position.x < global_position.x
+	if hit_left_side and left_wing_intact:
+		left_wing_intact = false
+	elif not hit_left_side and right_wing_intact:
+		right_wing_intact = false
+	elif left_wing_intact:
+		left_wing_intact = false
+	else:
+		right_wing_intact = false
+	_recalculate_runtime_loadout()
+
+
+func _get_shield_hit_cost() -> float:
+	if shield_component_count <= 0:
+		return INF
+	return 4.0 / float(shield_component_count)
+
+
+func _destroy_ship() -> void:
+	ship_destroyed = true
+	_emit_runtime_status()
+	get_tree().call_deferred("reload_current_scene")
+
+
+func get_runtime_status() -> Dictionary:
+	var laser_levels := {
+		"left_wing": 0,
+		"fuselage": 0,
+		"right_wing": 0
+	}
+	for laser_mount in laser_mounts:
+		laser_levels[laser_mount["bay"]] = int(laser_mount["level"])
+
+	var shield_hit_cost := _get_shield_hit_cost()
+	var shield_capacity := 0.0
+	var shield_remaining := 0.0
+	if shield_component_count > 0:
+		shield_capacity = maximum_power / shield_hit_cost
+		shield_remaining = current_power / shield_hit_cost
+	return {
+		"current_power": current_power,
+		"maximum_power": maximum_power,
+		"shield_count": shield_component_count,
+		"shield_capacity": shield_capacity,
+		"shield_remaining": shield_remaining,
+		"shields_active": (
+			shield_component_count > 0
+			and current_power >= shield_hit_cost
+		),
+		"laser_count": laser_mounts.size(),
+		"laser_levels": laser_levels,
+		"left_wing_intact": left_wing_intact,
+		"right_wing_intact": right_wing_intact,
+		"ship_destroyed": ship_destroyed
+	}
+
+
+func _emit_runtime_status() -> void:
+	runtime_status_changed.emit(get_runtime_status())
 
 
 func _handle_maneuver_input() -> void:
@@ -162,6 +435,20 @@ func _handle_maneuver_input() -> void:
 func _start_barrel_roll(direction: float) -> void:
 	barrel_roll_direction = direction
 	barrel_roll_time = 0.0
+
+
+func _get_barrel_roll_movement_direction() -> float:
+	if (
+		barrel_roll_direction > 0.0
+		and Input.is_action_pressed("knife_left")
+	):
+		return -1.0
+	if (
+		barrel_roll_direction < 0.0
+		and Input.is_action_pressed("knife_right")
+	):
+		return 1.0
+	return 0.0
 
 
 func _update_roll(delta: float, horizontal_input: float, rotation_weight: float) -> void:

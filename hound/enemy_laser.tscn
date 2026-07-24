@@ -1,13 +1,10 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=5 format=3 uid="uid://dnp3qwg16si4i"]
 
-[ext_resource type="Script" path="res://enemy_laser.gd" id="1_enemy_laser"]
+[ext_resource type="Script" uid="uid://bxf1mkimmdcgj" path="res://enemy_laser.gd" id="1_enemy_laser"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_enemy_laser"]
 shading_mode = 0
 albedo_color = Color(1, 0.04, 0.02, 1)
-emission_enabled = true
-emission = Color(1, 0.01, 0, 1)
-emission_energy_multiplier = 2.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_enemy_laser"]
 material = SubResource("StandardMaterial3D_enemy_laser")
@@ -18,7 +15,6 @@ size = Vector3(0.04, 0.04, 0.4)
 
 [node name="EnemyLaser" type="Area3D" groups=["enemy_projectile"]]
 collision_layer = 8
-collision_mask = 1
 script = ExtResource("1_enemy_laser")
 
 [node name="Mesh" type="MeshInstance3D" parent="."]

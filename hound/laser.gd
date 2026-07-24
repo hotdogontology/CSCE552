@@ -2,23 +2,34 @@ extends Area3D
 
 @export var speed := 18.0
 @export var lifetime := 2.0
+@export var damage := 1
 
 @onready var laser_mesh: MeshInstance3D = $Mesh
 @onready var hitbox: CollisionShape3D = $CollisionShape3D
 @onready var explosion_sound: AudioStreamPlayer3D = $Explosion
 
 var has_hit := false
+var direction := Vector3.FORWARD
 
 
 func _ready() -> void:
 	area_entered.connect(_on_area_entered)
 
 
+func set_direction(new_direction: Vector3) -> void:
+	direction = new_direction.normalized()
+	look_at(global_position + direction, Vector3.UP)
+
+
+func set_damage(new_damage: int) -> void:
+	damage = maxi(new_damage, 1)
+
+
 func _physics_process(delta: float) -> void:
 	if has_hit:
 		return
 
-	var movement := Vector3.FORWARD * speed * delta
+	var movement := direction * speed * delta
 	var query := PhysicsShapeQueryParameters3D.new()
 	query.shape = hitbox.shape
 	query.transform = hitbox.global_transform
@@ -71,7 +82,7 @@ func _damage_colliders_at_impact(
 
 func _damage_target(target: Node) -> void:
 	if target.has_method("take_damage"):
-		target.call("take_damage", 1)
+		target.call("take_damage", damage)
 
 
 func _play_impact() -> void:

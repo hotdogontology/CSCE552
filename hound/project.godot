@@ -11,9 +11,13 @@ config_version=5
 [application]
 
 config/name="Hound"
-run/main_scene="uid://lvduepqic8sb"
+run/main_scene="res://title.tscn"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 config/icon="res://icon.svg"
+
+[autoload]
+
+LoadoutState="*res://loadout_state.gd"
 
 [input]
 

@@ -1,0 +1,181 @@
+[gd_scene load_steps=4 format=3 uid="uid://bbxbk1jvsx2kx"]
+
+[ext_resource type="PackedScene" uid="uid://4vxwl6a2fbtl" path="res://loadout_bay_grid.tscn" id="1_bay"]
+[ext_resource type="Script" uid="uid://buuk1kdpn46sd" path="res://loadout.gd" id="2_loadout"]
+[ext_resource type="Script" uid="uid://7rlx3fo7k1p2" path="res://component_drag_source.gd" id="3_drag_source"]
+
+[node name="Loadout" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_loadout")
+
+[node name="Layout" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = 20.0
+offset_right = -40.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="Layout"]
+layout_mode = 2
+text = "Ship Loadout"
+horizontal_alignment = 1
+
+[node name="Body" type="HBoxContainer" parent="Layout"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="ComponentPalette" type="VBoxContainer" parent="Layout/Body"]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Battery" type="VBoxContainer" parent="Layout/Body/ComponentPalette"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Layout/Body/ComponentPalette/Battery"]
+layout_mode = 2
+text = "Battery"
+horizontal_alignment = 1
+
+[node name="DragSource" type="GridContainer" parent="Layout/Body/ComponentPalette/Battery"]
+layout_mode = 2
+tooltip_text = "Drag a 1×1 battery onto a bay."
+script = ExtResource("3_drag_source")
+
+[node name="Shield" type="VBoxContainer" parent="Layout/Body/ComponentPalette"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Layout/Body/ComponentPalette/Shield"]
+layout_mode = 2
+text = "Shield"
+horizontal_alignment = 1
+
+[node name="DragSource" type="GridContainer" parent="Layout/Body/ComponentPalette/Shield"]
+layout_mode = 2
+tooltip_text = "Drag a 2×2 shield onto a bay."
+script = ExtResource("3_drag_source")
+component_type = "shield"
+component_size = Vector2i(2, 2)
+atlas_region = Rect2(24, 0, 16, 16)
+
+[node name="Laser" type="VBoxContainer" parent="Layout/Body/ComponentPalette"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Layout/Body/ComponentPalette/Laser"]
+layout_mode = 2
+text = "Laser"
+horizontal_alignment = 1
+
+[node name="DragSource" type="GridContainer" parent="Layout/Body/ComponentPalette/Laser"]
+layout_mode = 2
+tooltip_text = "Drag a vertical 1×4 laser onto a bay."
+script = ExtResource("3_drag_source")
+component_type = "laser"
+component_size = Vector2i(1, 4)
+atlas_region = Rect2(40, 0, 16, 16)
+
+[node name="Bays" type="HBoxContainer" parent="Layout/Body"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 32
+alignment = 1
+
+[node name="LeftWingBay" parent="Layout/Body/Bays" instance=ExtResource("1_bay")]
+layout_mode = 2
+
+[node name="Label" parent="Layout/Body/Bays/LeftWingBay" index="0"]
+text = "Left-Wing Bay"
+
+[node name="FuselageBay" parent="Layout/Body/Bays" instance=ExtResource("1_bay")]
+layout_mode = 2
+
+[node name="Label" parent="Layout/Body/Bays/FuselageBay" index="0"]
+text = "Fuselage Bay"
+
+[node name="Grid" parent="Layout/Body/Bays/FuselageBay" index="1"]
+columns = 2
+bay_id = "fuselage"
+
+[node name="RightWingBay" parent="Layout/Body/Bays" instance=ExtResource("1_bay")]
+layout_mode = 2
+
+[node name="Label" parent="Layout/Body/Bays/RightWingBay" index="0"]
+text = "Right-Wing Bay"
+
+[node name="Grid" parent="Layout/Body/Bays/RightWingBay" index="1"]
+bay_id = "right_wing"
+
+[node name="SavedLoadouts" type="VBoxContainer" parent="Layout/Body"]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Title" type="Label" parent="Layout/Body/SavedLoadouts"]
+layout_mode = 2
+text = "Saved Loadouts"
+horizontal_alignment = 1
+
+[node name="LoadoutSlot1" type="Button" parent="Layout/Body/SavedLoadouts"]
+custom_minimum_size = Vector2(160, 120)
+layout_mode = 2
+text = "Loadout 1
+Empty"
+
+[node name="LoadoutSlot2" type="Button" parent="Layout/Body/SavedLoadouts"]
+custom_minimum_size = Vector2(160, 120)
+layout_mode = 2
+text = "Loadout 2
+Empty"
+
+[node name="Summary" type="HBoxContainer" parent="Layout"]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="ShieldLevel" type="Label" parent="Layout/Summary"]
+layout_mode = 2
+text = "Shield Level: 0"
+
+[node name="LaserCount" type="Label" parent="Layout/Summary"]
+layout_mode = 2
+text = "Lasers: 0"
+
+[node name="Power" type="Label" parent="Layout/Summary"]
+layout_mode = 2
+text = "Battery Area: 0 / 0 required"
+
+[node name="RemovalHint" type="Label" parent="Layout"]
+layout_mode = 2
+text = "Right-click a placed component to remove it."
+horizontal_alignment = 1
+
+[node name="ValidationMessage" type="Label" parent="Layout"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="SaveButton" type="Button" parent="Layout"]
+layout_mode = 2
+text = "Save Loadout"
+
+[node name="OverwriteDialog" type="ConfirmationDialog" parent="."]
+title = "Overwrite Loadout"
+ok_button_text = "Overwrite"
+dialog_text = "Overwrite this loadout?"
+
+[editable path="Layout/Body/Bays/LeftWingBay"]
+[editable path="Layout/Body/Bays/FuselageBay"]
+[editable path="Layout/Body/Bays/RightWingBay"]
