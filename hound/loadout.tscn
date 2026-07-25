@@ -31,6 +31,12 @@ layout_mode = 2
 text = "Ship Loadout"
 horizontal_alignment = 1
 
+[node name="DirectionsButton" type="Button" parent="Layout"]
+custom_minimum_size = Vector2(220, 42)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Loadout Directions"
+
 [node name="Body" type="HBoxContainer" parent="Layout"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -171,10 +177,82 @@ horizontal_alignment = 1
 layout_mode = 2
 text = "Save Loadout"
 
+[node name="LaunchButton" type="Button" parent="Layout"]
+layout_mode = 2
+disabled = true
+text = "Launch Mission"
+
 [node name="OverwriteDialog" type="ConfirmationDialog" parent="."]
 title = "Overwrite Loadout"
 ok_button_text = "Overwrite"
 dialog_text = "Overwrite this loadout?"
+
+[node name="DirectionsPopup" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Dimmer" type="ColorRect" parent="DirectionsPopup"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.75)
+
+[node name="Center" type="CenterContainer" parent="DirectionsPopup"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="DirectionsPopup/Center"]
+custom_minimum_size = Vector2(720, 420)
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="DirectionsPopup/Center/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 30
+
+[node name="Content" type="VBoxContainer" parent="DirectionsPopup/Center/Panel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Title" type="Label" parent="DirectionsPopup/Center/Panel/Margin/Content"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "LOADOUT DIRECTIONS"
+horizontal_alignment = 1
+
+[node name="Directions" type="Label" parent="DirectionsPopup/Center/Panel/Margin/Content"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 19
+text = "1. Drag and drop components into the bays, or select a component and click a cell to place it.
+
+2. Every loadout must have at least one laser array.
+
+3. Battery area must be at least equal to the combined shield and laser area.
+
+4. Add more batteries for more power. Contiguous batteries provide additional power."
+autowrap_mode = 2
+
+[node name="DirectionsBackButton" type="Button" parent="DirectionsPopup/Center/Panel/Margin/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Back"
 
 [editable path="Layout/Body/Bays/LeftWingBay"]
 [editable path="Layout/Body/Bays/FuselageBay"]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://lvduepqic8sb"]
+[gd_scene load_steps=12 format=3 uid="uid://lvduepqic8sb"]
 
 [ext_resource type="PackedScene" uid="uid://dwnwtc5vqs7xi" path="res://player.tscn" id="1_ig7tw"]
 [ext_resource type="PackedScene" uid="uid://djkj0jhaau2i8" path="res://trench_segment.tscn" id="2_0xm2m"]
@@ -7,6 +7,7 @@
 [ext_resource type="Shader" uid="uid://bsadnnmw73pfm" path="res://starfield.gdshader" id="5_starfield"]
 [ext_resource type="Script" uid="uid://b2h6msnqt384g" path="res://aim_reticle.gd" id="6_reticle"]
 [ext_resource type="Script" uid="uid://lfvo7s3b3pt5" path="res://mission_hud.gd" id="7_status_hud"]
+[ext_resource type="Script" uid="uid://bdpfw1vt6vqqp" path="res://pause_menu.gd" id="8_pause_menu"]
 
 [sub_resource type="Environment" id="Environment_space"]
 background_mode = 1
@@ -141,3 +142,66 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("6_reticle")
+
+[node name="PauseMenu" type="Control" parent="HUD"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("8_pause_menu")
+
+[node name="Dimmer" type="ColorRect" parent="HUD/PauseMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.72)
+
+[node name="Center" type="CenterContainer" parent="HUD/PauseMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="HUD/PauseMenu/Center"]
+custom_minimum_size = Vector2(420, 280)
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="HUD/PauseMenu/Center/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 30
+
+[node name="Options" type="VBoxContainer" parent="HUD/PauseMenu/Center/Panel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="Title" type="Label" parent="HUD/PauseMenu/Center/Panel/Margin/Options"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "PAUSED"
+horizontal_alignment = 1
+
+[node name="ResumeButton" type="Button" parent="HUD/PauseMenu/Center/Panel/Margin/Options"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(340, 58)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Resume"
+
+[node name="MainMenuButton" type="Button" parent="HUD/PauseMenu/Center/Panel/Margin/Options"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(340, 58)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Return to Main Menu"

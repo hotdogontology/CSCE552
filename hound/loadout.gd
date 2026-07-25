@@ -8,9 +8,11 @@ extends Control
 @onready var power_label: Label = $Layout/Summary/Power
 @onready var validation_message: Label = $Layout/ValidationMessage
 @onready var save_button: Button = $Layout/SaveButton
+@onready var launch_button: Button = $Layout/LaunchButton
 @onready var loadout_slot_1: Button = $Layout/Body/SavedLoadouts/LoadoutSlot1
 @onready var loadout_slot_2: Button = $Layout/Body/SavedLoadouts/LoadoutSlot2
 @onready var overwrite_dialog: ConfirmationDialog = $OverwriteDialog
+@onready var directions_popup: Control = $DirectionsPopup
 
 var grids: Array[Node] = []
 var loadout_slots: Array[Button] = []
@@ -26,11 +28,38 @@ func _ready() -> void:
 	for source in get_tree().get_nodes_in_group("component_palette_sources"):
 		source.component_selected.connect(_select_component.bind(source))
 	save_button.pressed.connect(_save_loadout)
+	launch_button.pressed.connect(_launch_mission)
 	loadout_slot_1.pressed.connect(_request_overwrite.bind(0))
 	loadout_slot_2.pressed.connect(_request_overwrite.bind(1))
 	overwrite_dialog.confirmed.connect(_confirm_overwrite)
+	$Layout/DirectionsButton.pressed.connect(_show_directions)
+	%DirectionsBackButton.pressed.connect(_hide_directions)
 	_update_summary()
 	_refresh_saved_loadout_slots()
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if directions_popup.visible and event.is_action_pressed("ui_cancel"):
+		_hide_directions()
+		get_viewport().set_input_as_handled()
+
+
+func _show_directions() -> void:
+	directions_popup.show()
+	%DirectionsBackButton.grab_focus()
+
+
+func _hide_directions() -> void:
+	directions_popup.hide()
+	$Layout/DirectionsButton.grab_focus()
+
+
+func _launch_mission() -> void:
+	var state := get_node("/root/LoadoutState")
+	if not bool(state.get("has_saved_loadout")):
+		validation_message.text = "Save a valid loadout before launching."
+		return
+	get_tree().change_scene_to_file("res://main.tscn")
 
 
 func _select_component(component_data: Dictionary, selected_source: Node) -> void:
@@ -127,7 +156,6 @@ func _commit_save(slot_index: int, loadout_data: Dictionary) -> void:
 	pending_overwrite_slot = -1
 	validation_message.text = "Loadout %d saved." % (slot_index + 1)
 	_refresh_saved_loadout_slots()
-	get_tree().change_scene_to_file("res://main.tscn")
 
 
 func _refresh_saved_loadout_slots() -> void:
@@ -136,6 +164,7 @@ func _refresh_saved_loadout_slots() -> void:
 	var state := get_node("/root/LoadoutState")
 	var saved_loadouts: Array[Dictionary] = state.call("get_saved_loadouts")
 	var active_slot := int(state.get("active_loadout_index"))
+	launch_button.disabled = not bool(state.get("has_saved_loadout"))
 	for slot_index in loadout_slots.size():
 		var slot := loadout_slots[slot_index]
 		if slot_index >= saved_loadouts.size():

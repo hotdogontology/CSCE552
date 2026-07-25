@@ -11,6 +11,7 @@ var battery_area := 0
 var has_saved_loadout := false
 var saved_loadouts: Array[Dictionary] = []
 var active_loadout_index := -1
+var vertical_controls_inverted := false
 
 
 func save_loadout(

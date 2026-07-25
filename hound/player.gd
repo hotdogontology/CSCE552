@@ -22,9 +22,11 @@ const BAY_ORDER := ["left_wing", "fuselage", "right_wing"]
 @export_range(0.05, 1.0, 0.05) var fire_interval := 0.2
 @export_range(0.0, 20.0, 0.1) var power_recharge_per_second := 2.0
 @export_range(0.0, 10.0, 0.1) var power_cost_per_laser_component := 1.0
+@export_range(0.0, 20.0, 0.1) var maneuver_power_cost_per_second := 3.0
 
 @onready var ship_model: MeshInstance3D = $ShipModel
 @onready var hitbox: CollisionShape3D = $CockpitHitBox
+@onready var wing_damage_sound: AudioStreamPlayer = $WingDamageSound
 
 var velocity := Vector2.ZERO
 var model_rest_rotation := Vector3.ZERO
@@ -42,23 +44,40 @@ var shield_component_count := 0
 var maximum_power := 0.0
 var current_power := 0.0
 var ship_destroyed := false
+var vertical_controls_inverted := false
 
 func _ready() -> void:
 	model_rest_rotation = ship_model.rotation
 	visual_roll = model_rest_rotation.z
+	wing_damage_sound.finished.connect(_repeat_wing_damage_sound)
+	var state := get_node_or_null("/root/LoadoutState")
+	if state != null:
+		vertical_controls_inverted = bool(
+			state.get("vertical_controls_inverted")
+		)
 	_apply_saved_loadout()
 
 
 func _process(delta: float) -> void:
-	_recharge_power(delta)
+	_update_continuous_power(delta)
 	_handle_maneuver_input()
 	_handle_firing(delta)
+	if Input.is_action_just_pressed("invert_vertical"):
+		vertical_controls_inverted = not vertical_controls_inverted
+		var state := get_node_or_null("/root/LoadoutState")
+		if state != null:
+			state.set(
+				"vertical_controls_inverted",
+				vertical_controls_inverted
+			)
 
 	var input_direction := Input.get_vector(
 		"move_left", "move_right", "move_up", "move_down"
 	)
 	# Input.get_vector returns negative Y for up, matching world-space Y here.
 	input_direction.y *= -1.0
+	if vertical_controls_inverted:
+		input_direction.y *= -1.0
 
 	var target_velocity := input_direction * speed
 	var barrel_roll_movement := _get_barrel_roll_movement_direction()
@@ -105,14 +124,31 @@ func _process(delta: float) -> void:
 	hitbox.rotation.z = visual_roll
 
 
-func _recharge_power(delta: float) -> void:
-	if ship_destroyed or current_power >= maximum_power:
+func _update_continuous_power(delta: float) -> void:
+	if ship_destroyed:
 		return
-	current_power = minf(
-		current_power + power_recharge_per_second * delta,
-		maximum_power
+	var using_maneuver_power := (
+		Input.is_action_pressed("boost")
+		!= Input.is_action_pressed("brake")
+		and current_power > 0.0
 	)
+	if using_maneuver_power:
+		current_power = maxf(
+			current_power - maneuver_power_cost_per_second * delta,
+			0.0
+		)
+	elif current_power < maximum_power:
+		current_power = minf(
+			current_power + power_recharge_per_second * delta,
+			maximum_power
+		)
+	else:
+		return
 	_emit_runtime_status()
+
+
+func can_use_maneuver_power() -> bool:
+	return not ship_destroyed and current_power > 0.0
 
 
 func _keep_player_on_screen() -> void:
@@ -342,6 +378,8 @@ func _is_bay_intact(bay_id: String) -> bool:
 func receive_enemy_hit(hit_position: Vector3) -> void:
 	if ship_destroyed:
 		return
+	if barrel_roll_direction != 0.0:
+		return
 
 	var shield_hit_cost := _get_shield_hit_cost()
 	if shield_component_count > 0 and current_power >= shield_hit_cost:
@@ -363,6 +401,7 @@ func receive_enemy_hit(hit_position: Vector3) -> void:
 	else:
 		right_wing_intact = false
 	_recalculate_runtime_loadout()
+	_update_wing_damage_sound()
 
 
 func _get_shield_hit_cost() -> float:
@@ -373,8 +412,26 @@ func _get_shield_hit_cost() -> float:
 
 func _destroy_ship() -> void:
 	ship_destroyed = true
+	wing_damage_sound.stop()
 	_emit_runtime_status()
 	get_tree().call_deferred("reload_current_scene")
+
+
+func _update_wing_damage_sound() -> void:
+	var wing_is_damaged := not left_wing_intact or not right_wing_intact
+	if wing_is_damaged and not ship_destroyed:
+		if not wing_damage_sound.playing:
+			wing_damage_sound.play()
+	else:
+		wing_damage_sound.stop()
+
+
+func _repeat_wing_damage_sound() -> void:
+	if (
+		not ship_destroyed
+		and (not left_wing_intact or not right_wing_intact)
+	):
+		wing_damage_sound.play()
 
 
 func get_runtime_status() -> Dictionary:

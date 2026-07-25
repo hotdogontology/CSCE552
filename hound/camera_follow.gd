@@ -1,9 +1,9 @@
 extends Camera3D
 
 @export var target_path: NodePath = NodePath("../Player")
-@export_range(0.0, 1.0, 0.05) var horizontal_follow_amount := 0.3
-@export_range(0.0, 1.0, 0.05) var vertical_follow_amount := 0.2
-@export var follow_smoothing := 7.0
+@export_range(0.0, 1.0, 0.05) var horizontal_follow_amount := 0.5
+@export_range(0.0, 1.0, 0.05) var vertical_follow_amount := 0.35
+@export var follow_smoothing := 8.0
 
 @onready var target: Node3D = get_node(target_path) as Node3D
 

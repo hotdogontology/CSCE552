@@ -47,8 +47,18 @@ func _process(delta: float) -> void:
 
 func _update_scroll_speed(delta: float) -> void:
 	var target_speed := scroll_speed
-	var boosting := Input.is_action_pressed("boost")
-	var braking := Input.is_action_pressed("brake")
+	var maneuver_power_available := (
+		player.has_method("can_use_maneuver_power")
+		and bool(player.call("can_use_maneuver_power"))
+	)
+	var boosting := (
+		Input.is_action_pressed("boost")
+		and maneuver_power_available
+	)
+	var braking := (
+		Input.is_action_pressed("brake")
+		and maneuver_power_available
+	)
 	if boosting and not braking:
 		target_speed = boost_scroll_speed
 	elif braking and not boosting:

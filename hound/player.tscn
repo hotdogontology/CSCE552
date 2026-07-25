@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://dwnwtc5vqs7xi"]
+[gd_scene load_steps=6 format=3 uid="uid://dwnwtc5vqs7xi"]
 
 [ext_resource type="ArrayMesh" uid="uid://d058srxq6bkb0" path="res://blockbench/starship1.obj" id="1_4flbx"]
 [ext_resource type="Script" uid="uid://86glxucyisx5" path="res://player.gd" id="1_onrkg"]
 [ext_resource type="AudioStream" uid="uid://bs02wwu0244tq" path="res://sound effects/fire_laser.wav" id="3_i3pqv"]
+[ext_resource type="AudioStream" uid="uid://wcg58tc2ioi1" path="res://sound effects/wingdamage_sfx_0.wav" id="4_wing_damage"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_4flbx"]
 size = Vector3(0.28, 0.06, 0.42)
@@ -19,3 +20,6 @@ shape = SubResource("BoxShape3D_4flbx")
 
 [node name="LaserSound" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("3_i3pqv")
+
+[node name="WingDamageSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_wing_damage")
