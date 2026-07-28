@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://lvduepqic8sb"]
+[gd_scene format=3 uid="uid://lvduepqic8sb"]
 
 [ext_resource type="PackedScene" uid="uid://dwnwtc5vqs7xi" path="res://player.tscn" id="1_ig7tw"]
 [ext_resource type="PackedScene" uid="uid://djkj0jhaau2i8" path="res://trench_segment.tscn" id="2_0xm2m"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://b2h6msnqt384g" path="res://aim_reticle.gd" id="6_reticle"]
 [ext_resource type="Script" uid="uid://lfvo7s3b3pt5" path="res://mission_hud.gd" id="7_status_hud"]
 [ext_resource type="Script" uid="uid://bdpfw1vt6vqqp" path="res://pause_menu.gd" id="8_pause_menu"]
+[ext_resource type="AudioStream" uid="uid://bk35fvnmwgli7" path="res://sound effects/soundtrack.wav" id="9_kek77"]
 
 [sub_resource type="Environment" id="Environment_space"]
 background_mode = 1
@@ -22,32 +23,32 @@ material = SubResource("ShaderMaterial_starfield")
 radius = 500.0
 height = 1000.0
 
-[node name="Main" type="Node3D"]
+[node name="Main" type="Node3D" unique_id=120870927]
 script = ExtResource("3_main")
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=27113691]
 environment = SubResource("Environment_space")
 
-[node name="Starfield" type="MeshInstance3D" parent="."]
+[node name="Starfield" type="MeshInstance3D" parent="." unique_id=2032845796]
 mesh = SubResource("SphereMesh_starfield")
 
-[node name="Player" parent="." instance=ExtResource("1_ig7tw")]
+[node name="Player" parent="." unique_id=491766267 instance=ExtResource("1_ig7tw")]
 
-[node name="Camera3D" type="Camera3D" parent="."]
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1058123418]
 transform = Transform3D(1, 0, 0, 0, 0.956554, 0.291554, 0, -0.291554, 0.956554, -0.00951095, 0.500372, 1.0276)
 script = ExtResource("4_camera")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=629580050]
 transform = Transform3D(1, 0, 0, 0, 0.0722287, 0.997388, 0, -0.997388, 0.0722287, 0, 8, 2)
 
-[node name="TutorialTrench" parent="." instance=ExtResource("2_0xm2m")]
+[node name="TutorialTrench" parent="." unique_id=1752787669 instance=ExtResource("2_0xm2m")]
 
-[node name="BuildingTimer" type="Timer" parent="."]
+[node name="BuildingTimer" type="Timer" parent="." unique_id=1393010177]
 one_shot = true
 
-[node name="HUD" type="CanvasLayer" parent="."]
+[node name="HUD" type="CanvasLayer" parent="." unique_id=396556517]
 
-[node name="StatusHUD" type="Control" parent="HUD"]
+[node name="StatusHUD" type="Control" parent="HUD" unique_id=807096795]
 layout_mode = 3
 anchors_preset = 12
 anchor_top = 1.0
@@ -62,7 +63,7 @@ grow_vertical = 0
 mouse_filter = 2
 script = ExtResource("7_status_hud")
 
-[node name="Readouts" type="HBoxContainer" parent="HUD/StatusHUD"]
+[node name="Readouts" type="HBoxContainer" parent="HUD/StatusHUD" unique_id=1227827491]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -72,12 +73,12 @@ grow_vertical = 2
 theme_override_constants/separation = 48
 alignment = 1
 
-[node name="ShieldColumn" type="Control" parent="HUD/StatusHUD/Readouts"]
+[node name="ShieldColumn" type="Control" parent="HUD/StatusHUD/Readouts" unique_id=1729094364]
 custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="ShieldReadout" type="VBoxContainer" parent="HUD/StatusHUD/Readouts/ShieldColumn"]
+[node name="ShieldReadout" type="VBoxContainer" parent="HUD/StatusHUD/Readouts/ShieldColumn" unique_id=291083323]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -87,7 +88,7 @@ grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
 
-[node name="ShieldLabel" type="Label" parent="HUD/StatusHUD/Readouts/ShieldColumn/ShieldReadout"]
+[node name="ShieldLabel" type="Label" parent="HUD/StatusHUD/Readouts/ShieldColumn/ShieldReadout" unique_id=992981344]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.1, 0.55, 1, 1)
@@ -95,36 +96,36 @@ theme_override_font_sizes/font_size = 20
 text = "SHIELDS DOWN"
 horizontal_alignment = 1
 
-[node name="PowerReadout" type="VBoxContainer" parent="HUD/StatusHUD/Readouts"]
+[node name="PowerReadout" type="VBoxContainer" parent="HUD/StatusHUD/Readouts" unique_id=766999958]
 custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 alignment = 1
 
-[node name="PowerLabel" type="Label" parent="HUD/StatusHUD/Readouts/PowerReadout"]
+[node name="PowerLabel" type="Label" parent="HUD/StatusHUD/Readouts/PowerReadout" unique_id=1036609935]
 unique_name_in_owner = true
 layout_mode = 2
 text = "POWER"
 horizontal_alignment = 1
 
-[node name="PowerBar" type="ProgressBar" parent="HUD/StatusHUD/Readouts/PowerReadout"]
+[node name="PowerBar" type="ProgressBar" parent="HUD/StatusHUD/Readouts/PowerReadout" unique_id=248655778]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(280, 18)
 layout_mode = 2
 show_percentage = false
 
-[node name="StatusReadout" type="VBoxContainer" parent="HUD/StatusHUD/Readouts"]
+[node name="StatusReadout" type="VBoxContainer" parent="HUD/StatusHUD/Readouts" unique_id=1755668019]
 custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 alignment = 1
 
-[node name="ShipLabel" type="Label" parent="HUD/StatusHUD/Readouts/StatusReadout"]
+[node name="ShipLabel" type="Label" parent="HUD/StatusHUD/Readouts/StatusReadout" unique_id=830473168]
 layout_mode = 2
 text = "STATUS"
 horizontal_alignment = 1
 
-[node name="ShipIcon" type="TextureRect" parent="HUD/StatusHUD/Readouts/StatusReadout"]
+[node name="ShipIcon" type="TextureRect" parent="HUD/StatusHUD/Readouts/StatusReadout" unique_id=1026178254]
 unique_name_in_owner = true
 texture_filter = 1
 custom_minimum_size = Vector2(48, 48)
@@ -133,7 +134,7 @@ size_flags_horizontal = 4
 expand_mode = 3
 stretch_mode = 5
 
-[node name="AimReticle" type="Control" parent="HUD"]
+[node name="AimReticle" type="Control" parent="HUD" unique_id=1738850165]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -143,7 +144,7 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("6_reticle")
 
-[node name="PauseMenu" type="Control" parent="HUD"]
+[node name="PauseMenu" type="Control" parent="HUD" unique_id=1093755081]
 visible = false
 layout_mode = 3
 anchors_preset = 15
@@ -153,7 +154,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("8_pause_menu")
 
-[node name="Dimmer" type="ColorRect" parent="HUD/PauseMenu"]
+[node name="Dimmer" type="ColorRect" parent="HUD/PauseMenu" unique_id=1428630551]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -162,7 +163,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.72)
 
-[node name="Center" type="CenterContainer" parent="HUD/PauseMenu"]
+[node name="Center" type="CenterContainer" parent="HUD/PauseMenu" unique_id=1036188870]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -170,38 +171,43 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Panel" type="PanelContainer" parent="HUD/PauseMenu/Center"]
+[node name="Panel" type="PanelContainer" parent="HUD/PauseMenu/Center" unique_id=1118696477]
 custom_minimum_size = Vector2(420, 280)
 layout_mode = 2
 
-[node name="Margin" type="MarginContainer" parent="HUD/PauseMenu/Center/Panel"]
+[node name="Margin" type="MarginContainer" parent="HUD/PauseMenu/Center/Panel" unique_id=645101619]
 layout_mode = 2
 theme_override_constants/margin_left = 40
 theme_override_constants/margin_top = 30
 theme_override_constants/margin_right = 40
 theme_override_constants/margin_bottom = 30
 
-[node name="Options" type="VBoxContainer" parent="HUD/PauseMenu/Center/Panel/Margin"]
+[node name="Options" type="VBoxContainer" parent="HUD/PauseMenu/Center/Panel/Margin" unique_id=412992817]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 1
 
-[node name="Title" type="Label" parent="HUD/PauseMenu/Center/Panel/Margin/Options"]
+[node name="Title" type="Label" parent="HUD/PauseMenu/Center/Panel/Margin/Options" unique_id=362403010]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "PAUSED"
 horizontal_alignment = 1
 
-[node name="ResumeButton" type="Button" parent="HUD/PauseMenu/Center/Panel/Margin/Options"]
+[node name="ResumeButton" type="Button" parent="HUD/PauseMenu/Center/Panel/Margin/Options" unique_id=814012389]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(340, 58)
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
 text = "Resume"
 
-[node name="MainMenuButton" type="Button" parent="HUD/PauseMenu/Center/Panel/Margin/Options"]
+[node name="MainMenuButton" type="Button" parent="HUD/PauseMenu/Center/Panel/Margin/Options" unique_id=511431376]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(340, 58)
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
 text = "Return to Main Menu"
+
+[node name="TrainingMusic" type="AudioStreamPlayer" parent="." unique_id=286050152]
+stream = ExtResource("9_kek77")
+volume_db = -10.0
+autoplay = true
