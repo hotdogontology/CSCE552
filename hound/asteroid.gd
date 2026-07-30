@@ -21,6 +21,10 @@ const METAL_ASTEROID_PATH := "res://metal_rich_asteroid.tscn"
 @export_range(0.0, 4.0, 0.05) var maximum_tumble_speed := 1.2
 @export_range(0.0, 8.0, 0.1) var fragment_spread_speed := 2.5
 
+@onready var asteroid_mesh: MeshInstance3D = $Mesh
+@onready var hitbox: CollisionShape3D = $CollisionShape3D
+@onready var explosion_sound: AudioStreamPlayer3D = $ExplosionSound
+
 var tumble_speed := Vector3.ZERO
 var drift_velocity := Vector3.ZERO
 var health := 1
@@ -69,7 +73,12 @@ func take_damage(amount: int = 1) -> void:
 	has_been_destroyed = true
 	if is_large and randf() <= break_apart_chance:
 		_spawn_fragments()
-	queue_free()
+	asteroid_mesh.hide()
+	hitbox.set_deferred("disabled", true)
+	set_deferred("monitoring", false)
+	set_process(false)
+	explosion_sound.finished.connect(queue_free, CONNECT_ONE_SHOT)
+	explosion_sound.play()
 
 
 func _get_maximum_health() -> int:

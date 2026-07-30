@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="ArrayMesh" uid="uid://d058srxq6bkb0" path="res://blockbench/starship1.obj" id="1_ship"]
+[ext_resource type="Script" path="res://enemy_fighter.gd" id="2_enemy_fighter"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_enemy_red"]
 albedo_color = Color(0.85, 0.025, 0.025, 1)
@@ -13,6 +14,7 @@ size = Vector3(0.28, 0.06, 0.42)
 [node name="EnemyFighter" type="Area3D" groups=["enemy", "obstacle"]]
 collision_layer = 2
 collision_mask = 0
+script = ExtResource("2_enemy_fighter")
 
 [node name="ShipModel" type="MeshInstance3D" parent="."]
 material_override = SubResource("StandardMaterial3D_enemy_red")

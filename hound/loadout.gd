@@ -7,8 +7,14 @@ extends Control
 @onready var laser_count_label: Label = $Layout/Summary/LaserCount
 @onready var power_label: Label = $Layout/Summary/Power
 @onready var validation_message: Label = $Layout/ValidationMessage
-@onready var save_button: Button = $Layout/SaveButton
-@onready var launch_button: Button = $Layout/LaunchButton
+@onready var clear_bays_button: Button = (
+	$Layout/ActionButtons/ClearBaysButton
+)
+@onready var save_button: Button = $Layout/ActionButtons/SaveButton
+@onready var launch_button: Button = $Layout/ActionButtons/LaunchButton
+@onready var default_loadout_button: Button = (
+	$Layout/Body/SavedLoadouts/DefaultLoadoutButton
+)
 @onready var loadout_slot_1: Button = $Layout/Body/SavedLoadouts/LoadoutSlot1
 @onready var loadout_slot_2: Button = $Layout/Body/SavedLoadouts/LoadoutSlot2
 @onready var overwrite_dialog: ConfirmationDialog = $OverwriteDialog
@@ -29,8 +35,10 @@ func _ready() -> void:
 		source.component_selected.connect(_select_component.bind(source))
 	save_button.pressed.connect(_save_loadout)
 	launch_button.pressed.connect(_launch_mission)
-	loadout_slot_1.pressed.connect(_request_overwrite.bind(0))
-	loadout_slot_2.pressed.connect(_request_overwrite.bind(1))
+	clear_bays_button.pressed.connect(_clear_bays)
+	default_loadout_button.pressed.connect(_activate_default_loadout)
+	loadout_slot_1.pressed.connect(_on_loadout_slot_pressed.bind(0))
+	loadout_slot_2.pressed.connect(_on_loadout_slot_pressed.bind(1))
 	overwrite_dialog.confirmed.connect(_confirm_overwrite)
 	$Layout/DirectionsButton.pressed.connect(_show_directions)
 	$Layout/Body/SavedLoadouts/MainMenuButton.pressed.connect(_return_to_main_menu)
@@ -65,6 +73,73 @@ func _launch_mission() -> void:
 		validation_message.text = "Save a valid loadout before launching."
 		return
 	get_tree().change_scene_to_file("res://main.tscn")
+
+
+func _activate_default_loadout() -> void:
+	var state := get_node("/root/LoadoutState")
+	var default_loadout: Dictionary = state.call("activate_default_loadout")
+	var components_by_bay: Dictionary = default_loadout["components_by_bay"]
+	left_wing_grid.call(
+		"load_saved_components",
+		components_by_bay["left_wing"]
+	)
+	fuselage_grid.call(
+		"load_saved_components",
+		components_by_bay["fuselage"]
+	)
+	right_wing_grid.call(
+		"load_saved_components",
+		components_by_bay["right_wing"]
+	)
+	_update_summary()
+	validation_message.text = "Default loadout selected."
+	_refresh_saved_loadout_slots()
+
+
+func _on_loadout_slot_pressed(slot_index: int) -> void:
+	if not pending_loadout_data.is_empty():
+		_request_overwrite(slot_index)
+		return
+	var state := get_node("/root/LoadoutState")
+	var saved_loadouts: Array[Dictionary] = state.call("get_saved_loadouts")
+	if slot_index >= saved_loadouts.size():
+		_clear_bays()
+		return
+	var loadout_data: Dictionary = state.call(
+		"activate_saved_loadout",
+		slot_index
+	)
+	_load_components_into_grids(loadout_data["components_by_bay"])
+	_update_summary()
+	validation_message.text = "Loadout %d selected." % (slot_index + 1)
+	_refresh_saved_loadout_slots()
+
+
+func _clear_bays() -> void:
+	var state := get_node("/root/LoadoutState")
+	state.call("clear_active_loadout")
+	for grid in grids:
+		grid.call("clear_components")
+	pending_loadout_data.clear()
+	pending_overwrite_slot = -1
+	_update_summary()
+	validation_message.text = "Bays cleared."
+	_refresh_saved_loadout_slots()
+
+
+func _load_components_into_grids(components_by_bay: Dictionary) -> void:
+	left_wing_grid.call(
+		"load_saved_components",
+		components_by_bay["left_wing"]
+	)
+	fuselage_grid.call(
+		"load_saved_components",
+		components_by_bay["fuselage"]
+	)
+	right_wing_grid.call(
+		"load_saved_components",
+		components_by_bay["right_wing"]
+	)
 
 
 func _select_component(component_data: Dictionary, selected_source: Node) -> void:
@@ -169,20 +244,25 @@ func _refresh_saved_loadout_slots() -> void:
 	var state := get_node("/root/LoadoutState")
 	var saved_loadouts: Array[Dictionary] = state.call("get_saved_loadouts")
 	var active_slot := int(state.get("active_loadout_index"))
+	var using_default := bool(state.get("using_default_loadout"))
+	default_loadout_button.text = "Default Loadout"
+	_set_loadout_button_selected(default_loadout_button, using_default)
 	launch_button.disabled = not bool(state.get("has_saved_loadout"))
 	for slot_index in loadout_slots.size():
 		var slot := loadout_slots[slot_index]
+		_set_loadout_button_selected(
+			slot,
+			slot_index == active_slot and not using_default
+		)
 		if slot_index >= saved_loadouts.size():
 			slot.text = "Loadout %d\nEmpty" % (slot_index + 1)
 			continue
 
 		var saved_loadout := saved_loadouts[slot_index]
-		var active_marker := " *" if slot_index == active_slot else ""
 		slot.text = (
-			"Loadout %d%s\nShields: %d\nLasers: %d\nBattery: %d"
+			"Loadout %d\nShields: %d  Lasers: %d\nBattery: %d"
 			% [
 				slot_index + 1,
-				active_marker,
 				int(saved_loadout["shield_level"]),
 				int(saved_loadout["laser_component_count"]),
 				int(saved_loadout["battery_area"])
@@ -190,6 +270,20 @@ func _refresh_saved_loadout_slots() -> void:
 		)
 		if not pending_loadout_data.is_empty():
 			slot.text += "\nClick to overwrite"
+
+
+func _set_loadout_button_selected(button: Button, is_selected: bool) -> void:
+	for state_name in ["normal", "hover", "pressed"]:
+		button.remove_theme_stylebox_override(state_name)
+	if not is_selected:
+		return
+	for state_name in ["normal", "hover", "pressed"]:
+		var style := StyleBoxFlat.new()
+		style.bg_color = Color(0.08, 0.1, 0.15, 0.95)
+		style.border_color = Color(0.1, 0.55, 1.0, 1.0)
+		style.set_border_width_all(3)
+		style.set_corner_radius_all(4)
+		button.add_theme_stylebox_override(state_name, style)
 
 
 func _get_total_counts() -> Dictionary:

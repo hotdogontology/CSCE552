@@ -50,14 +50,8 @@ var map_size := Vector2.ZERO
 
 func _ready() -> void:
 	random.randomize()
-	%MainMenuButton.pressed.connect(_return_to_main_menu)
+	%MapMainMenuButton.pressed.connect(_return_to_main_menu)
 	_build_map()
-
-
-func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_cancel"):
-		_return_to_main_menu()
-		get_viewport().set_input_as_handled()
 
 
 func _build_map() -> void:
@@ -123,6 +117,8 @@ func _create_map_nodes() -> void:
 				location_name = location_names[
 					regular_node_number % location_names.size()
 				]
+				if column == 0 and row == 0:
+					location_name = "Asteroid Field"
 				star_name = STAR_REGIONS.keys().pick_random()
 				var strategic_resource: String = LOCATION_DATA[
 					location_name

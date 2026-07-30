@@ -1,12 +1,28 @@
-[gd_scene load_steps=6 format=3 uid="uid://dwnwtc5vqs7xi"]
+[gd_scene load_steps=10 format=3 uid="uid://dwnwtc5vqs7xi"]
 
 [ext_resource type="ArrayMesh" uid="uid://d058srxq6bkb0" path="res://blockbench/starship1.obj" id="1_4flbx"]
 [ext_resource type="Script" uid="uid://86glxucyisx5" path="res://player.gd" id="1_onrkg"]
 [ext_resource type="AudioStream" uid="uid://bs02wwu0244tq" path="res://sound effects/fire_laser.wav" id="3_i3pqv"]
 [ext_resource type="AudioStream" uid="uid://wcg58tc2ioi1" path="res://sound effects/wingdamage_sfx_0.wav" id="4_wing_damage"]
+[ext_resource type="AudioStream" path="res://sound effects/hit.wav" id="5_hit"]
+[ext_resource type="AudioStream" path="res://sound effects/boost.wav" id="6_boost"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_4flbx"]
 size = Vector3(0.28, 0.06, 0.42)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_maneuver_jet"]
+shading_mode = 0
+albedo_color = Color(0.72, 0.92, 1, 1)
+emission_enabled = true
+emission = Color(0.25, 0.72, 1, 1)
+emission_energy_multiplier = 5.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_maneuver_jet"]
+material = SubResource("StandardMaterial3D_maneuver_jet")
+top_radius = 0.026
+bottom_radius = 0.0
+height = 0.12
+radial_segments = 8
 
 [node name="Player" type="Area3D" groups=["player"]]
 collision_mask = 2
@@ -14,6 +30,66 @@ script = ExtResource("1_onrkg")
 
 [node name="ShipModel" type="MeshInstance3D" parent="."]
 mesh = ExtResource("1_4flbx")
+
+[node name="ManeuverJets" type="Node3D" parent="ShipModel"]
+
+[node name="BoostJets" type="Node3D" parent="ShipModel/ManeuverJets"]
+visible = false
+
+[node name="LeftJet" type="MeshInstance3D" parent="ShipModel/ManeuverJets/BoostJets"]
+position = Vector3(-0.07, 0, 0.27)
+rotation = Vector3(1.5708, 0, 0)
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_maneuver_jet")
+
+[node name="RightJet" type="MeshInstance3D" parent="ShipModel/ManeuverJets/BoostJets"]
+position = Vector3(0.07, 0, 0.27)
+rotation = Vector3(1.5708, 0, 0)
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_maneuver_jet")
+
+[node name="BrakeJets" type="Node3D" parent="ShipModel/ManeuverJets"]
+visible = false
+
+[node name="LeftJet" type="MeshInstance3D" parent="ShipModel/ManeuverJets/BrakeJets"]
+position = Vector3(-0.07, 0, -0.27)
+rotation = Vector3(-1.5708, 0, 0)
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_maneuver_jet")
+
+[node name="RightJet" type="MeshInstance3D" parent="ShipModel/ManeuverJets/BrakeJets"]
+position = Vector3(0.07, 0, -0.27)
+rotation = Vector3(-1.5708, 0, 0)
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_maneuver_jet")
+
+[node name="RollLeftJets" type="Node3D" parent="ShipModel/ManeuverJets"]
+visible = false
+
+[node name="LeftUpperJet" type="MeshInstance3D" parent="ShipModel/ManeuverJets/RollLeftJets"]
+position = Vector3(-0.12, 0.09, 0)
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_maneuver_jet")
+
+[node name="RightLowerJet" type="MeshInstance3D" parent="ShipModel/ManeuverJets/RollLeftJets"]
+position = Vector3(0.12, -0.09, 0)
+rotation = Vector3(0, 0, 3.14159)
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_maneuver_jet")
+
+[node name="RollRightJets" type="Node3D" parent="ShipModel/ManeuverJets"]
+visible = false
+
+[node name="LeftLowerJet" type="MeshInstance3D" parent="ShipModel/ManeuverJets/RollRightJets"]
+position = Vector3(-0.12, -0.09, 0)
+rotation = Vector3(0, 0, 3.14159)
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_maneuver_jet")
+
+[node name="RightUpperJet" type="MeshInstance3D" parent="ShipModel/ManeuverJets/RollRightJets"]
+position = Vector3(0.12, 0.09, 0)
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_maneuver_jet")
 
 [node name="CockpitHitBox" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_4flbx")
@@ -25,3 +101,11 @@ volume_db = -15.0
 [node name="WingDamageSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("4_wing_damage")
 volume_db = -15.0
+
+[node name="HitSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_hit")
+volume_db = -10.0
+
+[node name="ManeuverJetSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_boost")
+volume_db = -10.0

@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://bfaeflq4kl1f1"
+path="res://.godot/imported/drumbeat.wav-13be717e65a99539932aee2b3ae1910e.sample"
+
+[deps]
+
+source_file="res://sound effects/drumbeat.wav"
+dest_files=["res://.godot/imported/drumbeat.wav-13be717e65a99539932aee2b3ae1910e.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

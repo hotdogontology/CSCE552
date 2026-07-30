@@ -3,6 +3,11 @@ extends GridContainer
 signal loadout_changed
 
 const ICON_SHEET := preload("res://sprites/loadouticons.png")
+const COMPONENT_ATLAS_REGIONS := {
+	"battery": Rect2(8, 0, 16, 16),
+	"shield": Rect2(24, 0, 16, 16),
+	"laser": Rect2(40, 0, 16, 16)
+}
 
 @export_enum("left_wing", "fuselage", "right_wing") var bay_id := "left_wing"
 
@@ -95,6 +100,33 @@ func get_saved_components() -> Array[Dictionary]:
 	return saved_components
 
 
+func load_saved_components(components: Array) -> void:
+	_clear_all_components()
+	for component in components:
+		var component_type := str(component["component_type"])
+		var component_data := {
+			"component_type": component_type,
+			"size": Vector2i(component["size"]),
+			"atlas_region": COMPONENT_ATLAS_REGIONS[component_type]
+		}
+		var origin := Vector2i(component["origin"])
+		var origin_index := origin.y * columns + origin.x
+		_place_component(origin_index, component_data, false)
+	loadout_changed.emit()
+
+
+func clear_components() -> void:
+	_clear_all_components()
+	loadout_changed.emit()
+
+
+func _clear_all_components() -> void:
+	for cell in cells:
+		_clear_cell_icon(cell)
+	occupancy.fill(-1)
+	placed_components.clear()
+
+
 func _is_component_data(data: Variant) -> bool:
 	return (
 		data is Dictionary
@@ -167,7 +199,11 @@ func _can_place(origin_index: int, component_size: Vector2i) -> bool:
 	return true
 
 
-func _place_component(origin_index: int, data: Dictionary) -> void:
+func _place_component(
+	origin_index: int,
+	data: Dictionary,
+	emit_change: bool = true
+) -> void:
 	var component_size: Vector2i = data["size"]
 	var component_id := placed_components.size()
 	var origin_column := origin_index % columns
@@ -193,7 +229,8 @@ func _place_component(origin_index: int, data: Dictionary) -> void:
 		"occupied_cells": occupied_cells,
 		"removed": false
 	})
-	loadout_changed.emit()
+	if emit_change:
+		loadout_changed.emit()
 
 
 func _remove_component(component_id: int) -> void:

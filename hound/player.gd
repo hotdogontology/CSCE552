@@ -23,10 +23,21 @@ const BAY_ORDER := ["left_wing", "fuselage", "right_wing"]
 @export_range(0.0, 20.0, 0.1) var power_recharge_per_second := 2.0
 @export_range(0.0, 10.0, 0.1) var power_cost_per_laser_component := 1.0
 @export_range(0.0, 20.0, 0.1) var maneuver_power_cost_per_second := 3.0
+@export_range(0.03, 0.5, 0.01) var maneuver_jet_flash_interval := 0.08
 
 @onready var ship_model: MeshInstance3D = $ShipModel
 @onready var hitbox: CollisionShape3D = $CockpitHitBox
 @onready var wing_damage_sound: AudioStreamPlayer = $WingDamageSound
+@onready var hit_sound: AudioStreamPlayer = $HitSound
+@onready var maneuver_jet_sound: AudioStreamPlayer = $ManeuverJetSound
+@onready var boost_jets: Node3D = $ShipModel/ManeuverJets/BoostJets
+@onready var brake_jets: Node3D = $ShipModel/ManeuverJets/BrakeJets
+@onready var roll_left_jets: Node3D = (
+	$ShipModel/ManeuverJets/RollLeftJets
+)
+@onready var roll_right_jets: Node3D = (
+	$ShipModel/ManeuverJets/RollRightJets
+)
 
 var velocity := Vector2.ZERO
 var model_rest_rotation := Vector3.ZERO
@@ -45,6 +56,8 @@ var maximum_power := 0.0
 var current_power := 0.0
 var ship_destroyed := false
 var vertical_controls_inverted := false
+var maneuver_jet_flash_time := 0.0
+var maneuver_jets_were_active := false
 
 func _ready() -> void:
 	model_rest_rotation = ship_model.rotation
@@ -118,10 +131,50 @@ func _process(delta: float) -> void:
 
 	_update_roll(delta, input_direction.x, rotation_weight)
 	ship_model.rotation.z = visual_roll
+	_update_maneuver_jets(delta)
 	# Rotate the thin collider with the ship. At knife edge its narrow vertical
 	# dimension becomes its screen-space width instead of leaving a wide box behind.
 	hitbox.rotation.x = ship_model.rotation.x
 	hitbox.rotation.z = visual_roll
+
+
+func _update_maneuver_jets(delta: float) -> void:
+	var maneuver_power_available := can_use_maneuver_power()
+	var boosting := (
+		Input.is_action_pressed("boost")
+		and not Input.is_action_pressed("brake")
+		and maneuver_power_available
+	)
+	var braking := (
+		Input.is_action_pressed("brake")
+		and not Input.is_action_pressed("boost")
+		and maneuver_power_available
+	)
+	var rolling_left := barrel_roll_direction > 0.0
+	var rolling_right := barrel_roll_direction < 0.0
+	var jets_are_active := (
+		boosting or braking or rolling_left or rolling_right
+	)
+	if jets_are_active and not maneuver_jets_were_active:
+		maneuver_jet_flash_time = 0.0
+	elif jets_are_active:
+		maneuver_jet_flash_time = fmod(
+			maneuver_jet_flash_time + delta,
+			maneuver_jet_flash_interval * 2.0
+		)
+	var flash_is_visible := (
+		jets_are_active
+		and maneuver_jet_flash_time < maneuver_jet_flash_interval
+	)
+	boost_jets.visible = boosting and flash_is_visible
+	brake_jets.visible = braking and flash_is_visible
+	roll_left_jets.visible = rolling_left and flash_is_visible
+	roll_right_jets.visible = rolling_right and flash_is_visible
+	if jets_are_active and not maneuver_jet_sound.playing:
+		maneuver_jet_sound.play()
+	elif not jets_are_active and maneuver_jet_sound.playing:
+		maneuver_jet_sound.stop()
+	maneuver_jets_were_active = jets_are_active
 
 
 func _update_continuous_power(delta: float) -> void:
@@ -240,21 +293,29 @@ func _apply_saved_loadout() -> void:
 func _apply_default_runtime_loadout() -> void:
 	runtime_components_by_bay = {
 		"left_wing": [
-			{"component_type": "laser", "occupied_cells": [0, 4, 8, 12]}
-		],
-		"fuselage": [],
-		"right_wing": [
 			{"component_type": "laser", "occupied_cells": [3, 7, 11, 15]}
+		],
+		"fuselage": [
+			{"component_type": "shield", "occupied_cells": [0, 1, 2, 3]},
+			{"component_type": "shield", "occupied_cells": [4, 5, 6, 7]}
+		],
+		"right_wing": [
+			{"component_type": "laser", "occupied_cells": [0, 4, 8, 12]}
 		]
 	}
 	for bay_id in ["left_wing", "right_wing"]:
 		for cell_index in range(16):
-			if cell_index % 4 == (0 if bay_id == "left_wing" else 3):
+			if cell_index % 4 == (3 if bay_id == "left_wing" else 0):
 				continue
-			runtime_components_by_bay[bay_id].append({
+				runtime_components_by_bay[bay_id].append({
 				"component_type": "battery",
 				"occupied_cells": [cell_index]
-			})
+				})
+	for cell_index in range(8, 16):
+		runtime_components_by_bay["fuselage"].append({
+			"component_type": "battery",
+			"occupied_cells": [cell_index]
+		})
 	_recalculate_runtime_loadout(false)
 
 
@@ -380,6 +441,7 @@ func receive_enemy_hit(hit_position: Vector3) -> void:
 		return
 	if barrel_roll_direction != 0.0:
 		return
+	hit_sound.play()
 
 	var shield_hit_cost := _get_shield_hit_cost()
 	if shield_component_count > 0 and current_power >= shield_hit_cost:
@@ -414,6 +476,13 @@ func _destroy_ship() -> void:
 	ship_destroyed = true
 	wing_damage_sound.stop()
 	_emit_runtime_status()
+	if hit_sound.playing:
+		hit_sound.finished.connect(_reload_destroyed_ship, CONNECT_ONE_SHOT)
+	else:
+		_reload_destroyed_ship()
+
+
+func _reload_destroyed_ship() -> void:
 	get_tree().call_deferred("reload_current_scene")
 
 

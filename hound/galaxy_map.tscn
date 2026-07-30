@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://galaxy_map.gd" id="1_galaxy_map"]
+[ext_resource type="Script" path="res://pause_menu.gd" id="2_pause_menu"]
 
 [node name="GalaxyMap" type="Node2D"]
 texture_filter = 1
@@ -25,7 +26,7 @@ theme_override_colors/font_color = Color(0.55, 0.75, 1, 1)
 theme_override_font_sizes/font_size = 16
 text = "Select a target destination"
 
-[node name="MainMenuButton" type="Button" parent="Interface"]
+[node name="MapMainMenuButton" type="Button" parent="Interface"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(150, 44)
 anchors_preset = 1
@@ -38,3 +39,66 @@ offset_bottom = 68.0
 grow_horizontal = 0
 theme_override_font_sizes/font_size = 18
 text = "Main Menu"
+
+[node name="PauseMenu" type="Control" parent="Interface"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_pause_menu")
+
+[node name="Dimmer" type="ColorRect" parent="Interface/PauseMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.72)
+
+[node name="Center" type="CenterContainer" parent="Interface/PauseMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Interface/PauseMenu/Center"]
+custom_minimum_size = Vector2(420, 280)
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Interface/PauseMenu/Center/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 30
+
+[node name="Options" type="VBoxContainer" parent="Interface/PauseMenu/Center/Panel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="Title" type="Label" parent="Interface/PauseMenu/Center/Panel/Margin/Options"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "PAUSED"
+horizontal_alignment = 1
+
+[node name="ResumeButton" type="Button" parent="Interface/PauseMenu/Center/Panel/Margin/Options"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(340, 58)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Resume"
+
+[node name="MainMenuButton" type="Button" parent="Interface/PauseMenu/Center/Panel/Margin/Options"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(340, 58)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Return to Main Menu"

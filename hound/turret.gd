@@ -11,6 +11,7 @@ const ENEMY_LASER_SCENE := preload("res://enemy_laser.tscn")
 
 var health := 3
 var fire_cooldown := 0.0
+var has_been_destroyed := false
 
 
 func _ready() -> void:
@@ -30,8 +31,15 @@ func _physics_process(delta: float) -> void:
 
 
 func take_damage(amount: int = 1) -> void:
+	if has_been_destroyed:
+		return
 	health -= amount
 	if health <= 0:
+		has_been_destroyed = true
+		get_tree().call_group(
+			"player_kill_counter",
+			"register_player_kill"
+		)
 		queue_free()
 
 

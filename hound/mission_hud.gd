@@ -14,9 +14,11 @@ const STATUS_REGIONS := {
 @onready var shield_readout: VBoxContainer = %ShieldReadout
 @onready var shield_label: Label = %ShieldLabel
 @onready var ship_icon: TextureRect = %ShipIcon
+@onready var kills_label: Label = %KillsLabel
 
 var ship_icon_state := "healthy"
 var displayed_ship_icon_state := ""
+var kill_count := 0
 
 
 func _ready() -> void:
@@ -27,6 +29,7 @@ func _ready() -> void:
 		return
 	player.runtime_status_changed.connect(_update_status)
 	_update_status(player.call("get_runtime_status"))
+	_update_kills_label()
 
 
 func _process(_delta: float) -> void:
@@ -88,3 +91,12 @@ func _set_ship_icon_region(icon_state: String) -> void:
 	atlas.atlas = SHIP_STATUS_TEXTURE
 	atlas.region = STATUS_REGIONS[icon_state]
 	ship_icon.texture = atlas
+
+
+func register_player_kill() -> void:
+	kill_count += 1
+	_update_kills_label()
+
+
+func _update_kills_label() -> void:
+	kills_label.text = "Kills : %d" % kill_count

@@ -1,0 +1,211 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="PackedScene" path="res://player.tscn" id="1_player"]
+[ext_resource type="Script" path="res://asteroid_field_level.gd" id="2_level"]
+[ext_resource type="Script" path="res://camera_follow.gd" id="3_camera"]
+[ext_resource type="Shader" path="res://starfield.gdshader" id="4_starfield"]
+[ext_resource type="Script" path="res://mission_hud.gd" id="5_hud"]
+[ext_resource type="Script" path="res://aim_reticle.gd" id="6_reticle"]
+[ext_resource type="Script" path="res://pause_menu.gd" id="7_pause"]
+
+[sub_resource type="Environment" id="Environment_space"]
+background_mode = 1
+background_color = Color(0.002, 0.004, 0.012, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_static_space"]
+shader = ExtResource("4_starfield")
+
+[sub_resource type="SphereMesh" id="SphereMesh_static_space"]
+material = SubResource("ShaderMaterial_static_space")
+radius = 500.0
+height = 1000.0
+
+[node name="AsteroidFieldLevel" type="Node3D"]
+script = ExtResource("2_level")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_space")
+
+[node name="StaticSpaceBackground" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_static_space")
+
+[node name="Player" parent="." instance=ExtResource("1_player")]
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.956554, 0.291554, 0, -0.291554, 0.956554, -0.00951095, 0.500372, 1.0276)
+script = ExtResource("3_camera")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.0722287, 0.997388, 0, -0.997388, 0.0722287, 0, 8, 2)
+shadow_enabled = true
+
+[node name="AsteroidTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="StatusHUD" type="Control" parent="HUD" groups=["player_kill_counter"]]
+layout_mode = 3
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 36.0
+offset_top = -122.0
+offset_right = -36.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+script = ExtResource("5_hud")
+
+[node name="Readouts" type="HBoxContainer" parent="HUD/StatusHUD"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 48
+alignment = 1
+
+[node name="ShieldColumn" type="Control" parent="HUD/StatusHUD/Readouts"]
+custom_minimum_size = Vector2(280, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ShieldReadout" type="VBoxContainer" parent="HUD/StatusHUD/Readouts/ShieldColumn"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="ShieldLabel" type="Label" parent="HUD/StatusHUD/Readouts/ShieldColumn/ShieldReadout"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.1, 0.55, 1, 1)
+theme_override_font_sizes/font_size = 20
+text = "SHIELDS DOWN"
+horizontal_alignment = 1
+
+[node name="PowerReadout" type="VBoxContainer" parent="HUD/StatusHUD/Readouts"]
+custom_minimum_size = Vector2(280, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="PowerLabel" type="Label" parent="HUD/StatusHUD/Readouts/PowerReadout"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "POWER"
+horizontal_alignment = 1
+
+[node name="PowerBar" type="ProgressBar" parent="HUD/StatusHUD/Readouts/PowerReadout"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(280, 18)
+layout_mode = 2
+show_percentage = false
+
+[node name="StatusReadout" type="VBoxContainer" parent="HUD/StatusHUD/Readouts"]
+custom_minimum_size = Vector2(280, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="ShipLabel" type="Label" parent="HUD/StatusHUD/Readouts/StatusReadout"]
+layout_mode = 2
+text = "STATUS"
+horizontal_alignment = 1
+
+[node name="KillsLabel" type="Label" parent="HUD/StatusHUD/Readouts/StatusReadout"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Kills : 0"
+horizontal_alignment = 1
+
+[node name="ShipIcon" type="TextureRect" parent="HUD/StatusHUD/Readouts/StatusReadout"]
+unique_name_in_owner = true
+texture_filter = 1
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+size_flags_horizontal = 4
+expand_mode = 3
+stretch_mode = 5
+
+[node name="AimReticle" type="Control" parent="HUD"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("6_reticle")
+
+[node name="PauseMenu" type="Control" parent="HUD"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("7_pause")
+
+[node name="Dimmer" type="ColorRect" parent="HUD/PauseMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.72)
+
+[node name="Center" type="CenterContainer" parent="HUD/PauseMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="HUD/PauseMenu/Center"]
+custom_minimum_size = Vector2(420, 280)
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="HUD/PauseMenu/Center/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 30
+
+[node name="Options" type="VBoxContainer" parent="HUD/PauseMenu/Center/Panel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="Title" type="Label" parent="HUD/PauseMenu/Center/Panel/Margin/Options"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "PAUSED"
+horizontal_alignment = 1
+
+[node name="ResumeButton" type="Button" parent="HUD/PauseMenu/Center/Panel/Margin/Options"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(340, 58)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Resume"
+
+[node name="MainMenuButton" type="Button" parent="HUD/PauseMenu/Center/Panel/Margin/Options"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(340, 58)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Return to Main Menu"

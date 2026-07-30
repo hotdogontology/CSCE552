@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://asteroid.gd" id="1_asteroid"]
+[ext_resource type="AudioStream" path="res://sound effects/asteroid_explosion.wav" id="2_explosion"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_asteroid"]
 albedo_color = Color(0.3, 0.13, 0.045, 1)
@@ -28,3 +29,7 @@ mesh = SubResource("SphereMesh_asteroid")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("SphereShape3D_asteroid")
+
+[node name="ExplosionSound" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("2_explosion")
+volume_db = -10.0

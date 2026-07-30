@@ -26,6 +26,7 @@ var health := 3
 var beam_state := BeamState.COOLDOWN
 var state_time_remaining := 0.0
 var damaged_player_this_burst := false
+var has_been_destroyed := false
 
 
 func _ready() -> void:
@@ -55,8 +56,15 @@ func _physics_process(delta: float) -> void:
 
 
 func take_damage(amount: int = 1) -> void:
+	if has_been_destroyed:
+		return
 	health -= maxi(amount, 1)
 	if health <= 0:
+		has_been_destroyed = true
+		get_tree().call_group(
+			"player_kill_counter",
+			"register_player_kill"
+		)
 		queue_free()
 
 

@@ -19,20 +19,21 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 40.0
-offset_top = 20.0
+offset_top = 8.0
 offset_right = -40.0
-offset_bottom = -20.0
+offset_bottom = -8.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 5
 
 [node name="Title" type="Label" parent="Layout"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 22
 text = "Ship Loadout"
 horizontal_alignment = 1
 
 [node name="DirectionsButton" type="Button" parent="Layout"]
-custom_minimum_size = Vector2(220, 42)
+custom_minimum_size = Vector2(220, 34)
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Loadout Directions"
@@ -129,10 +130,10 @@ bay_id = "right_wing"
 [node name="SavedLoadouts" type="VBoxContainer" parent="Layout/Body"]
 custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 5
 
 [node name="MainMenuButton" type="Button" parent="Layout/Body/SavedLoadouts"]
-custom_minimum_size = Vector2(160, 42)
+custom_minimum_size = Vector2(160, 34)
 layout_mode = 2
 text = "Return to Main Menu"
 
@@ -141,14 +142,19 @@ layout_mode = 2
 text = "Saved Loadouts"
 horizontal_alignment = 1
 
+[node name="DefaultLoadoutButton" type="Button" parent="Layout/Body/SavedLoadouts"]
+custom_minimum_size = Vector2(160, 40)
+layout_mode = 2
+text = "Default Loadout"
+
 [node name="LoadoutSlot1" type="Button" parent="Layout/Body/SavedLoadouts"]
-custom_minimum_size = Vector2(160, 120)
+custom_minimum_size = Vector2(160, 68)
 layout_mode = 2
 text = "Loadout 1
 Empty"
 
 [node name="LoadoutSlot2" type="Button" parent="Layout/Body/SavedLoadouts"]
-custom_minimum_size = Vector2(160, 120)
+custom_minimum_size = Vector2(160, 68)
 layout_mode = 2
 text = "Loadout 2
 Empty"
@@ -179,12 +185,26 @@ horizontal_alignment = 1
 layout_mode = 2
 horizontal_alignment = 1
 
-[node name="SaveButton" type="Button" parent="Layout"]
+[node name="ActionButtons" type="HBoxContainer" parent="Layout"]
 layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ClearBaysButton" type="Button" parent="Layout/ActionButtons"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Clear Bays"
+
+[node name="SaveButton" type="Button" parent="Layout/ActionButtons"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+size_flags_horizontal = 3
 text = "Save Loadout"
 
-[node name="LaunchButton" type="Button" parent="Layout"]
+[node name="LaunchButton" type="Button" parent="Layout/ActionButtons"]
+custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
+size_flags_horizontal = 3
 disabled = true
 text = "Launch Mission"
 

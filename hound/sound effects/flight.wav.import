@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://cgs6hw1c1lfmc"
+path="res://.godot/imported/flight.wav-febc6c1073284db0e5660bf2784989af.sample"
+
+[deps]
+
+source_file="res://sound effects/flight.wav"
+dest_files=["res://.godot/imported/flight.wav-febc6c1073284db0e5660bf2784989af.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

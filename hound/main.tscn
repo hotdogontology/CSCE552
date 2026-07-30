@@ -48,14 +48,14 @@ one_shot = true
 
 [node name="HUD" type="CanvasLayer" parent="." unique_id=396556517]
 
-[node name="StatusHUD" type="Control" parent="HUD" unique_id=807096795]
+[node name="StatusHUD" type="Control" parent="HUD" groups=["player_kill_counter"] unique_id=807096795]
 layout_mode = 3
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 36.0
-offset_top = -94.0
+offset_top = -122.0
 offset_right = -36.0
 offset_bottom = -20.0
 grow_horizontal = 2
@@ -123,6 +123,13 @@ alignment = 1
 [node name="ShipLabel" type="Label" parent="HUD/StatusHUD/Readouts/StatusReadout" unique_id=830473168]
 layout_mode = 2
 text = "STATUS"
+horizontal_alignment = 1
+
+[node name="KillsLabel" type="Label" parent="HUD/StatusHUD/Readouts/StatusReadout"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Kills : 0"
 horizontal_alignment = 1
 
 [node name="ShipIcon" type="TextureRect" parent="HUD/StatusHUD/Readouts/StatusReadout" unique_id=1026178254]
