@@ -7,6 +7,7 @@ extends Control
 
 
 func _ready() -> void:
+	$Menu/NewGameButton.pressed.connect(_start_new_game)
 	$Menu/TrainingButton.pressed.connect(_start_training)
 	$Menu/ControlsButton.pressed.connect(_show_controls)
 	%BackButton.pressed.connect(_hide_controls)
@@ -16,6 +17,7 @@ func _ready() -> void:
 	invert_vertical_toggle.button_pressed = bool(
 		get_node("/root/LoadoutState").get("vertical_controls_inverted")
 	)
+	$Menu/NewGameButton.grab_focus()
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -33,6 +35,10 @@ func _start_training() -> void:
 	get_tree().change_scene_to_file("res://loadout.tscn")
 
 
+func _start_new_game() -> void:
+	get_tree().change_scene_to_file("res://galaxy_map.tscn")
+
+
 func _show_controls() -> void:
 	main_menu.hide()
 	controls_panel.show()
@@ -41,7 +47,7 @@ func _show_controls() -> void:
 func _hide_controls() -> void:
 	controls_panel.hide()
 	main_menu.show()
-	$Menu/TrainingButton.grab_focus()
+	$Menu/NewGameButton.grab_focus()
 
 
 func _show_exit_menu() -> void:
@@ -51,7 +57,7 @@ func _show_exit_menu() -> void:
 
 func _hide_exit_menu() -> void:
 	exit_menu.hide()
-	$Menu/TrainingButton.grab_focus()
+	$Menu/NewGameButton.grab_focus()
 
 
 func _quit_game() -> void:
