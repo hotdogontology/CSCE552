@@ -33,6 +33,7 @@ func _ready() -> void:
 	loadout_slot_2.pressed.connect(_request_overwrite.bind(1))
 	overwrite_dialog.confirmed.connect(_confirm_overwrite)
 	$Layout/DirectionsButton.pressed.connect(_show_directions)
+	$Layout/Body/SavedLoadouts/MainMenuButton.pressed.connect(_return_to_main_menu)
 	%DirectionsBackButton.pressed.connect(_hide_directions)
 	_update_summary()
 	_refresh_saved_loadout_slots()
@@ -52,6 +53,10 @@ func _show_directions() -> void:
 func _hide_directions() -> void:
 	directions_popup.hide()
 	$Layout/DirectionsButton.grab_focus()
+
+
+func _return_to_main_menu() -> void:
+	get_tree().change_scene_to_file("res://title.tscn")
 
 
 func _launch_mission() -> void:

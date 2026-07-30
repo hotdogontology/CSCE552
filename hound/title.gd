@@ -2,6 +2,7 @@ extends Control
 
 @onready var main_menu: VBoxContainer = $Menu
 @onready var controls_panel: CenterContainer = $ControlsPanel
+@onready var exit_menu: Control = $ExitMenu
 @onready var invert_vertical_toggle: CheckButton = %InvertVerticalToggle
 
 
@@ -9,10 +10,23 @@ func _ready() -> void:
 	$Menu/TrainingButton.pressed.connect(_start_training)
 	$Menu/ControlsButton.pressed.connect(_show_controls)
 	%BackButton.pressed.connect(_hide_controls)
+	%ReturnToMainMenuButton.pressed.connect(_hide_exit_menu)
+	%QuitGameButton.pressed.connect(_quit_game)
 	invert_vertical_toggle.toggled.connect(_set_vertical_inversion)
 	invert_vertical_toggle.button_pressed = bool(
 		get_node("/root/LoadoutState").get("vertical_controls_inverted")
 	)
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_cancel"):
+		if controls_panel.visible:
+			_hide_controls()
+		elif exit_menu.visible:
+			_hide_exit_menu()
+		else:
+			_show_exit_menu()
+		get_viewport().set_input_as_handled()
 
 
 func _start_training() -> void:
@@ -27,6 +41,21 @@ func _show_controls() -> void:
 func _hide_controls() -> void:
 	controls_panel.hide()
 	main_menu.show()
+	$Menu/TrainingButton.grab_focus()
+
+
+func _show_exit_menu() -> void:
+	exit_menu.show()
+	%ReturnToMainMenuButton.grab_focus()
+
+
+func _hide_exit_menu() -> void:
+	exit_menu.hide()
+	$Menu/TrainingButton.grab_focus()
+
+
+func _quit_game() -> void:
+	get_tree().quit()
 
 
 func _set_vertical_inversion(is_inverted: bool) -> void:
