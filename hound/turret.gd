@@ -8,6 +8,7 @@ const ENEMY_LASER_SCENE := preload("res://enemy_laser.tscn")
 @export var fire_interval := 1.5
 @export var minimum_firing_distance := 2.0
 @export var maximum_firing_distance := 100.0
+@export var projectile_spawn_offset := Vector3(0.0, 2.5, 0.0)
 
 var health := 3
 var fire_cooldown := 0.0
@@ -57,7 +58,7 @@ func _try_to_fire() -> void:
 
 	var enemy_laser := ENEMY_LASER_SCENE.instantiate() as Area3D
 	get_tree().current_scene.add_child(enemy_laser)
-	enemy_laser.global_position = global_position + Vector3(0.0, 2.5, 0.0)
+	enemy_laser.global_position = global_position + projectile_spawn_offset
 	enemy_laser.call(
 		"set_direction",
 		enemy_laser.global_position.direction_to(player.global_position)

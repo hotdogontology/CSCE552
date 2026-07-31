@@ -32,6 +32,11 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _start_training() -> void:
+	get_node("/root/LoadoutState").call(
+		"select_mission",
+		"Training",
+		"res://main.tscn"
+	)
 	get_tree().change_scene_to_file("res://loadout.tscn")
 
 

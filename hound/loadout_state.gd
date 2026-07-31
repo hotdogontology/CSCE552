@@ -13,6 +13,13 @@ var saved_loadouts: Array[Dictionary] = []
 var active_loadout_index := -1
 var using_default_loadout := false
 var vertical_controls_inverted := false
+var selected_mission_name := "Training"
+var selected_mission_scene := "res://main.tscn"
+
+
+func select_mission(mission_name: String, mission_scene: String) -> void:
+	selected_mission_name = mission_name
+	selected_mission_scene = mission_scene
 
 
 func save_loadout(

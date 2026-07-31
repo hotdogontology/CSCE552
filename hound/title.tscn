@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://5h43p2ea5gwb"]
+[gd_scene format=3 uid="uid://5h43p2ea5gwb"]
 
 [ext_resource type="Script" uid="uid://cpyuhf6n1k0qh" path="res://title.gd" id="1_title"]
 
-[node name="Title" type="Control"]
+[node name="Title" type="Control" unique_id=522249953]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -11,7 +11,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_title")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="ColorRect" parent="." unique_id=1574817723]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -21,7 +21,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.015, 0.02, 0.04, 1)
 
-[node name="Menu" type="VBoxContainer" parent="."]
+[node name="Menu" type="VBoxContainer" parent="." unique_id=1726297598]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -37,31 +37,31 @@ grow_vertical = 2
 theme_override_constants/separation = 36
 alignment = 1
 
-[node name="GameTitle" type="Label" parent="Menu"]
+[node name="GameTitle" type="Label" parent="Menu" unique_id=708146861]
 layout_mode = 2
 theme_override_font_sizes/font_size = 52
-text = "FLEET"
+text = "FLEET (Demo)"
 horizontal_alignment = 1
 
-[node name="NewGameButton" type="Button" parent="Menu"]
+[node name="NewGameButton" type="Button" parent="Menu" unique_id=30928123]
 custom_minimum_size = Vector2(360, 64)
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "New Game"
 
-[node name="TrainingButton" type="Button" parent="Menu"]
+[node name="TrainingButton" type="Button" parent="Menu" unique_id=1267812482]
 custom_minimum_size = Vector2(360, 64)
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Training"
 
-[node name="ControlsButton" type="Button" parent="Menu"]
+[node name="ControlsButton" type="Button" parent="Menu" unique_id=1285237781]
 custom_minimum_size = Vector2(360, 64)
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Controls"
 
-[node name="ControlsPanel" type="CenterContainer" parent="."]
+[node name="ControlsPanel" type="CenterContainer" parent="." unique_id=148290433]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -70,148 +70,148 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Panel" type="PanelContainer" parent="ControlsPanel"]
+[node name="Panel" type="PanelContainer" parent="ControlsPanel" unique_id=903332607]
 custom_minimum_size = Vector2(560, 520)
 layout_mode = 2
 
-[node name="Margin" type="MarginContainer" parent="ControlsPanel/Panel"]
+[node name="Margin" type="MarginContainer" parent="ControlsPanel/Panel" unique_id=1092381562]
 layout_mode = 2
 theme_override_constants/margin_left = 40
 theme_override_constants/margin_top = 30
 theme_override_constants/margin_right = 40
 theme_override_constants/margin_bottom = 30
 
-[node name="Content" type="VBoxContainer" parent="ControlsPanel/Panel/Margin"]
+[node name="Content" type="VBoxContainer" parent="ControlsPanel/Panel/Margin" unique_id=801563763]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="Title" type="Label" parent="ControlsPanel/Panel/Margin/Content"]
+[node name="Title" type="Label" parent="ControlsPanel/Panel/Margin/Content" unique_id=250439984]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "CONTROLS"
 horizontal_alignment = 1
 
-[node name="ControlList" type="GridContainer" parent="ControlsPanel/Panel/Margin/Content"]
+[node name="ControlList" type="GridContainer" parent="ControlsPanel/Panel/Margin/Content" unique_id=1957273488]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/h_separation = 40
 theme_override_constants/v_separation = 8
 columns = 2
 
-[node name="MoveAction" type="Label" parent="ControlsPanel/Panel/Margin/Content/ControlList"]
+[node name="MoveAction" type="Label" parent="ControlsPanel/Panel/Margin/Content/ControlList" unique_id=182129668]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Move Ship"
 
-[node name="MoveKey" type="Label" parent="ControlsPanel/Panel/Margin/Content/ControlList"]
+[node name="MoveKey" type="Label" parent="ControlsPanel/Panel/Margin/Content/ControlList" unique_id=417080579]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 20
 text = "Arrow Keys"
 horizontal_alignment = 2
 
-[node name="FireAction" type="Label" parent="ControlsPanel/Panel/Margin/Content/ControlList"]
+[node name="FireAction" type="Label" parent="ControlsPanel/Panel/Margin/Content/ControlList" unique_id=1919797049]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Fire Lasers"
 
-[node name="FireKey" type="Label" parent="ControlsPanel/Panel/Margin/Content/ControlList"]
+[node name="FireKey" type="Label" parent="ControlsPanel/Panel/Margin/Content/ControlList" unique_id=1167766177]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Space"
 horizontal_alignment = 2
 
-[node name="BoostAction" type="Label" parent="ControlsPanel/Panel/Margin/Content/ControlList"]
+[node name="BoostAction" type="Label" parent="ControlsPanel/Panel/Margin/Content/ControlList" unique_id=1693849735]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Boost"
 
-[node name="BoostKey" type="Label" parent="ControlsPanel/Panel/Margin/Content/ControlList"]
+[node name="BoostKey" type="Label" parent="ControlsPanel/Panel/Margin/Content/ControlList" unique_id=586925738]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "S"
 horizontal_alignment = 2
 
-[node name="BrakeAction" type="Label" parent="ControlsPanel/Panel/Margin/Content/ControlList"]
+[node name="BrakeAction" type="Label" parent="ControlsPanel/Panel/Margin/Content/ControlList" unique_id=669660991]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Brake"
 
-[node name="BrakeKey" type="Label" parent="ControlsPanel/Panel/Margin/Content/ControlList"]
+[node name="BrakeKey" type="Label" parent="ControlsPanel/Panel/Margin/Content/ControlList" unique_id=1674128895]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "D"
 horizontal_alignment = 2
 
-[node name="KnifeLeftAction" type="Label" parent="ControlsPanel/Panel/Margin/Content/ControlList"]
+[node name="KnifeLeftAction" type="Label" parent="ControlsPanel/Panel/Margin/Content/ControlList" unique_id=1596606022]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Knife Edge Left"
 
-[node name="KnifeLeftKey" type="Label" parent="ControlsPanel/Panel/Margin/Content/ControlList"]
+[node name="KnifeLeftKey" type="Label" parent="ControlsPanel/Panel/Margin/Content/ControlList" unique_id=1425026441]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "A"
 horizontal_alignment = 2
 
-[node name="KnifeRightAction" type="Label" parent="ControlsPanel/Panel/Margin/Content/ControlList"]
+[node name="KnifeRightAction" type="Label" parent="ControlsPanel/Panel/Margin/Content/ControlList" unique_id=985174506]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Knife Edge Right"
 
-[node name="KnifeRightKey" type="Label" parent="ControlsPanel/Panel/Margin/Content/ControlList"]
+[node name="KnifeRightKey" type="Label" parent="ControlsPanel/Panel/Margin/Content/ControlList" unique_id=247921456]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "F"
 horizontal_alignment = 2
 
-[node name="RollLeftAction" type="Label" parent="ControlsPanel/Panel/Margin/Content/ControlList"]
+[node name="RollLeftAction" type="Label" parent="ControlsPanel/Panel/Margin/Content/ControlList" unique_id=1560172760]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Barrel Roll Left"
 
-[node name="RollLeftKey" type="Label" parent="ControlsPanel/Panel/Margin/Content/ControlList"]
+[node name="RollLeftKey" type="Label" parent="ControlsPanel/Panel/Margin/Content/ControlList" unique_id=2014549695]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Double-tap A"
 horizontal_alignment = 2
 
-[node name="RollRightAction" type="Label" parent="ControlsPanel/Panel/Margin/Content/ControlList"]
+[node name="RollRightAction" type="Label" parent="ControlsPanel/Panel/Margin/Content/ControlList" unique_id=486452566]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Barrel Roll Right"
 
-[node name="RollRightKey" type="Label" parent="ControlsPanel/Panel/Margin/Content/ControlList"]
+[node name="RollRightKey" type="Label" parent="ControlsPanel/Panel/Margin/Content/ControlList" unique_id=1695535738]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Double-tap F"
 horizontal_alignment = 2
 
-[node name="InvertAction" type="Label" parent="ControlsPanel/Panel/Margin/Content/ControlList"]
+[node name="InvertAction" type="Label" parent="ControlsPanel/Panel/Margin/Content/ControlList" unique_id=1526590148]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Toggle Vertical Axis"
 
-[node name="InvertKey" type="Label" parent="ControlsPanel/Panel/Margin/Content/ControlList"]
+[node name="InvertKey" type="Label" parent="ControlsPanel/Panel/Margin/Content/ControlList" unique_id=2085941497]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "X"
 horizontal_alignment = 2
 
-[node name="InvertVerticalToggle" type="CheckButton" parent="ControlsPanel/Panel/Margin/Content"]
+[node name="InvertVerticalToggle" type="CheckButton" parent="ControlsPanel/Panel/Margin/Content" unique_id=2124251609]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Invert Vertical Axis"
 
-[node name="BackButton" type="Button" parent="ControlsPanel/Panel/Margin/Content"]
+[node name="BackButton" type="Button" parent="ControlsPanel/Panel/Margin/Content" unique_id=253408457]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Back"
 
-[node name="ExitMenu" type="Control" parent="."]
+[node name="ExitMenu" type="Control" parent="." unique_id=2107123366]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -220,7 +220,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Dimmer" type="ColorRect" parent="ExitMenu"]
+[node name="Dimmer" type="ColorRect" parent="ExitMenu" unique_id=356625440]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -229,7 +229,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.72)
 
-[node name="Center" type="CenterContainer" parent="ExitMenu"]
+[node name="Center" type="CenterContainer" parent="ExitMenu" unique_id=718283389]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -237,36 +237,36 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Panel" type="PanelContainer" parent="ExitMenu/Center"]
+[node name="Panel" type="PanelContainer" parent="ExitMenu/Center" unique_id=173767863]
 custom_minimum_size = Vector2(420, 280)
 layout_mode = 2
 
-[node name="Margin" type="MarginContainer" parent="ExitMenu/Center/Panel"]
+[node name="Margin" type="MarginContainer" parent="ExitMenu/Center/Panel" unique_id=1228016158]
 layout_mode = 2
 theme_override_constants/margin_left = 40
 theme_override_constants/margin_top = 30
 theme_override_constants/margin_right = 40
 theme_override_constants/margin_bottom = 30
 
-[node name="Options" type="VBoxContainer" parent="ExitMenu/Center/Panel/Margin"]
+[node name="Options" type="VBoxContainer" parent="ExitMenu/Center/Panel/Margin" unique_id=2108455313]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 1
 
-[node name="Title" type="Label" parent="ExitMenu/Center/Panel/Margin/Options"]
+[node name="Title" type="Label" parent="ExitMenu/Center/Panel/Margin/Options" unique_id=462285314]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "QUIT GAME?"
 horizontal_alignment = 1
 
-[node name="ReturnToMainMenuButton" type="Button" parent="ExitMenu/Center/Panel/Margin/Options"]
+[node name="ReturnToMainMenuButton" type="Button" parent="ExitMenu/Center/Panel/Margin/Options" unique_id=1194690700]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(340, 58)
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
 text = "Return to Main Menu"
 
-[node name="QuitGameButton" type="Button" parent="ExitMenu/Center/Panel/Margin/Options"]
+[node name="QuitGameButton" type="Button" parent="ExitMenu/Center/Panel/Margin/Options" unique_id=238568439]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(340, 58)
 layout_mode = 2

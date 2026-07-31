@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="PackedScene" path="res://player.tscn" id="1_player"]
 [ext_resource type="Script" path="res://asteroid_field_level.gd" id="2_level"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://mission_hud.gd" id="5_hud"]
 [ext_resource type="Script" path="res://aim_reticle.gd" id="6_reticle"]
 [ext_resource type="Script" path="res://pause_menu.gd" id="7_pause"]
+[ext_resource type="AudioStream" uid="uid://bk35fvnmwgli7" path="res://sound effects/soundtrack.wav" id="8_music"]
 
 [sub_resource type="Environment" id="Environment_space"]
 background_mode = 1
@@ -30,6 +31,7 @@ environment = SubResource("Environment_space")
 mesh = SubResource("SphereMesh_static_space")
 
 [node name="Player" parent="." instance=ExtResource("1_player")]
+reload_after_destruction = false
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.956554, 0.291554, 0, -0.291554, 0.956554, -0.00951095, 0.500372, 1.0276)
@@ -128,6 +130,14 @@ theme_override_font_sizes/font_size = 18
 text = "Kills : 0"
 horizontal_alignment = 1
 
+[node name="MetalLabel" type="Label" parent="HUD/StatusHUD/Readouts/StatusReadout"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.82, 0.92, 1)
+theme_override_font_sizes/font_size = 18
+text = "Metal Harvested: 0 / 5"
+horizontal_alignment = 1
+
 [node name="ShipIcon" type="TextureRect" parent="HUD/StatusHUD/Readouts/StatusReadout"]
 unique_name_in_owner = true
 texture_filter = 1
@@ -209,3 +219,74 @@ custom_minimum_size = Vector2(340, 58)
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
 text = "Return to Main Menu"
+
+[node name="MissionResultOverlay" type="Control" parent="HUD"]
+process_mode = 3
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Dimmer" type="ColorRect" parent="HUD/MissionResultOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.78)
+
+[node name="Center" type="CenterContainer" parent="HUD/MissionResultOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="HUD/MissionResultOverlay/Center"]
+custom_minimum_size = Vector2(520, 310)
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="HUD/MissionResultOverlay/Center/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 48
+theme_override_constants/margin_top = 38
+theme_override_constants/margin_right = 48
+theme_override_constants/margin_bottom = 38
+
+[node name="Options" type="VBoxContainer" parent="HUD/MissionResultOverlay/Center/Panel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 26
+alignment = 1
+
+[node name="MissionResultTitle" type="Label" parent="HUD/MissionResultOverlay/Center/Panel/Margin/Options"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 38
+text = "Mission Success"
+horizontal_alignment = 1
+
+[node name="ResultGalaxyMapButton" type="Button" parent="HUD/MissionResultOverlay/Center/Panel/Margin/Options"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(420, 58)
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 21
+text = "Return to Galaxy Map"
+
+[node name="SelectLoadoutButton" type="Button" parent="HUD/MissionResultOverlay/Center/Panel/Margin/Options"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(420, 58)
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 21
+text = "Select Loadout for New Fighter"
+
+[node name="AsteroidMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_music")
+volume_db = -10.0
+autoplay = true

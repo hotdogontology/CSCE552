@@ -5,6 +5,8 @@ enum AsteroidComposition {
 	METAL
 }
 
+signal destroyed(composition: AsteroidComposition, was_large: bool)
+
 const ROCK_ASTEROID_PATH := "res://asteroid.tscn"
 const METAL_ASTEROID_PATH := "res://metal_rich_asteroid.tscn"
 
@@ -71,6 +73,7 @@ func take_damage(amount: int = 1) -> void:
 	if health > 0:
 		return
 	has_been_destroyed = true
+	destroyed.emit(composition, is_large)
 	if is_large and randf() <= break_apart_chance:
 		_spawn_fragments()
 	asteroid_mesh.hide()

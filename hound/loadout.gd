@@ -45,6 +45,7 @@ func _ready() -> void:
 	%DirectionsBackButton.pressed.connect(_hide_directions)
 	_update_summary()
 	_refresh_saved_loadout_slots()
+	launch_button.text = "Launch Mission"
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -72,7 +73,11 @@ func _launch_mission() -> void:
 	if not bool(state.get("has_saved_loadout")):
 		validation_message.text = "Save a valid loadout before launching."
 		return
-	get_tree().change_scene_to_file("res://main.tscn")
+	var mission_scene := str(state.get("selected_mission_scene"))
+	if mission_scene.is_empty() or not ResourceLoader.exists(mission_scene):
+		validation_message.text = "The selected mission is unavailable."
+		return
+	get_tree().change_scene_to_file(mission_scene)
 
 
 func _activate_default_loadout() -> void:

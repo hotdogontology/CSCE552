@@ -4,12 +4,16 @@
 [ext_resource type="Script" path="res://enemy_fighter.gd" id="2_enemy_fighter"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_enemy_red"]
-albedo_color = Color(0.85, 0.025, 0.025, 1)
+shading_mode = 0
+albedo_color = Color(1, 0.12, 0.04, 1)
+emission_enabled = true
+emission = Color(1, 0.015, 0.005, 1)
+emission_energy_multiplier = 3.0
 metallic = 0.2
 roughness = 0.45
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_enemy_fighter"]
-size = Vector3(0.28, 0.06, 0.42)
+size = Vector3(0.6, 0.4, 0.8)
 
 [node name="EnemyFighter" type="Area3D" groups=["enemy", "obstacle"]]
 collision_layer = 2

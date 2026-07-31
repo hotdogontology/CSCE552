@@ -51,6 +51,7 @@ var map_size := Vector2.ZERO
 func _ready() -> void:
 	random.randomize()
 	%MapMainMenuButton.pressed.connect(_return_to_main_menu)
+	%DemoUnavailableBackButton.pressed.connect(_hide_unavailable_dialog)
 	_build_map()
 
 
@@ -187,6 +188,7 @@ func _create_node_visuals() -> void:
 		var node_position: Vector2 = map_node["position"]
 		if bool(map_node["is_boss"]):
 			_create_boss_label(node_position)
+			_create_mission_button(map_node)
 			continue
 
 		var star_sprite := Sprite2D.new()
@@ -218,6 +220,67 @@ func _create_node_visuals() -> void:
 			Color(0.8, 0.9, 1.0)
 		)
 		add_child(location_label)
+		_create_mission_button(map_node)
+
+
+func _create_mission_button(map_node: Dictionary) -> void:
+	var mission_button := Button.new()
+	var node_position: Vector2 = map_node["position"]
+	mission_button.name = "MissionButton_%s" % map_node["id"]
+	mission_button.position = node_position - Vector2(34.0, 34.0)
+	mission_button.size = Vector2(68.0, 68.0)
+	mission_button.flat = true
+	mission_button.tooltip_text = "Select %s" % map_node["location"]
+	mission_button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	mission_button.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+	mission_button.pressed.connect(
+		_on_map_node_pressed.bind(int(map_node["id"]))
+	)
+	mission_button.mouse_entered.connect(
+		_on_map_node_mouse_entered.bind(int(map_node["id"]))
+	)
+	mission_button.mouse_exited.connect(_on_map_node_mouse_exited)
+	add_child(mission_button)
+
+
+func _on_map_node_mouse_entered(node_id: int) -> void:
+	if node_id != current_node_id:
+		return
+	var map_node: Dictionary = map_nodes[node_id]
+	if str(map_node["location"]) == "Asteroid Field":
+		$Interface/DestinationPrompt.text = (
+			"Deny enemy resources by harvesting asteroid metals"
+		)
+
+
+func _on_map_node_mouse_exited() -> void:
+	$Interface/DestinationPrompt.text = "Select a target destination"
+
+
+func _on_map_node_pressed(node_id: int) -> void:
+	if node_id < 0 or node_id >= map_nodes.size():
+		return
+	var map_node: Dictionary = map_nodes[node_id]
+	var location_name := str(map_node["location"])
+	if node_id != current_node_id or location_name != "Asteroid Field":
+		_show_unavailable_dialog()
+		return
+
+	get_node("/root/LoadoutState").call(
+		"select_mission",
+		location_name,
+		"res://asteroid_field_level.tscn"
+	)
+	get_tree().change_scene_to_file("res://loadout.tscn")
+
+
+func _show_unavailable_dialog() -> void:
+	%DemoUnavailableOverlay.show()
+	%DemoUnavailableBackButton.grab_focus()
+
+
+func _hide_unavailable_dialog() -> void:
+	%DemoUnavailableOverlay.hide()
 
 
 func _create_boss_label(node_position: Vector2) -> void:

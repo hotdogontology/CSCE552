@@ -1,6 +1,7 @@
 extends Area3D
 
 signal runtime_status_changed(status: Dictionary)
+signal destroyed
 
 const LASER_SCENE := preload("res://laser.tscn")
 const BAY_ORDER := ["left_wing", "fuselage", "right_wing"]
@@ -21,9 +22,10 @@ const BAY_ORDER := ["left_wing", "fuselage", "right_wing"]
 @export var barrel_roll_acceleration := 18.0
 @export_range(0.05, 1.0, 0.05) var fire_interval := 0.2
 @export_range(0.0, 20.0, 0.1) var power_recharge_per_second := 2.0
-@export_range(0.0, 10.0, 0.1) var power_cost_per_laser_component := 1.0
+@export_range(0.0, 10.0, 0.1) var power_cost_per_laser_component := 0.5
 @export_range(0.0, 20.0, 0.1) var maneuver_power_cost_per_second := 3.0
 @export_range(0.03, 0.5, 0.01) var maneuver_jet_flash_interval := 0.08
+@export var reload_after_destruction := true
 
 @onready var ship_model: MeshInstance3D = $ShipModel
 @onready var hitbox: CollisionShape3D = $CockpitHitBox
@@ -473,13 +475,22 @@ func _get_shield_hit_cost() -> float:
 
 
 func _destroy_ship() -> void:
+	if ship_destroyed:
+		return
 	ship_destroyed = true
 	wing_damage_sound.stop()
 	_emit_runtime_status()
+	destroyed.emit()
+	if not reload_after_destruction:
+		return
 	if hit_sound.playing:
 		hit_sound.finished.connect(_reload_destroyed_ship, CONNECT_ONE_SHOT)
 	else:
 		_reload_destroyed_ship()
+
+
+func destroy_ship() -> void:
+	_destroy_ship()
 
 
 func _reload_destroyed_ship() -> void:

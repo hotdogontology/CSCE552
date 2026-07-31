@@ -40,6 +40,62 @@ grow_horizontal = 0
 theme_override_font_sizes/font_size = 18
 text = "Main Menu"
 
+[node name="DemoUnavailableOverlay" type="Control" parent="Interface"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Dimmer" type="ColorRect" parent="Interface/DemoUnavailableOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.72)
+
+[node name="Center" type="CenterContainer" parent="Interface/DemoUnavailableOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Interface/DemoUnavailableOverlay/Center"]
+custom_minimum_size = Vector2(420, 220)
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Interface/DemoUnavailableOverlay/Center/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 30
+
+[node name="Content" type="VBoxContainer" parent="Interface/DemoUnavailableOverlay/Center/Panel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 28
+alignment = 1
+
+[node name="Message" type="Label" parent="Interface/DemoUnavailableOverlay/Center/Panel/Margin/Content"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Unavailable in demo"
+horizontal_alignment = 1
+
+[node name="DemoUnavailableBackButton" type="Button" parent="Interface/DemoUnavailableOverlay/Center/Panel/Margin/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(340, 58)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Return to Map"
+
 [node name="PauseMenu" type="Control" parent="Interface"]
 visible = false
 layout_mode = 3

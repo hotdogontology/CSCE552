@@ -15,6 +15,7 @@ const STATUS_REGIONS := {
 @onready var shield_label: Label = %ShieldLabel
 @onready var ship_icon: TextureRect = %ShipIcon
 @onready var kills_label: Label = %KillsLabel
+@onready var metal_label: Label = get_node_or_null("%MetalLabel") as Label
 
 var ship_icon_state := "healthy"
 var displayed_ship_icon_state := ""
@@ -30,6 +31,7 @@ func _ready() -> void:
 	player.runtime_status_changed.connect(_update_status)
 	_update_status(player.call("get_runtime_status"))
 	_update_kills_label()
+	set_metal_progress(0, 5)
 
 
 func _process(_delta: float) -> void:
@@ -100,3 +102,12 @@ func register_player_kill() -> void:
 
 func _update_kills_label() -> void:
 	kills_label.text = "Kills : %d" % kill_count
+
+
+func set_metal_progress(destroyed_count: int, target_count: int) -> void:
+	if metal_label == null:
+		return
+	metal_label.text = "Metal Harvested: %d / %d" % [
+		destroyed_count,
+		target_count
+	]

@@ -1,0 +1,43 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://destroyer.gd" id="1_destroyer"]
+[ext_resource type="PackedScene" path="res://trench_scraper.tscn" id="2_hull"]
+[ext_resource type="PackedScene" path="res://turret.tscn" id="3_turret"]
+
+[node name="Destroyer" type="Node3D" groups=["destroyer", "active_enemy_encounter"]]
+rotation = Vector3(0, 1.5708, 0)
+script = ExtResource("1_destroyer")
+
+[node name="Hull" parent="." instance=ExtResource("2_hull")]
+position = Vector3(-3.125, 0, 0)
+rotation = Vector3(0, 0, -1.5708)
+scale = Vector3(0.65, 1.25, 0.65)
+speed = 0.0
+despawn_z = 1000.0
+
+[node name="TurretLeft" parent="." instance=ExtResource("3_turret")]
+position = Vector3(-2, 0.65, 0)
+scale = Vector3(0.28, 0.28, 0.28)
+speed = 0.0
+despawn_z = 1000.0
+fire_interval = 2.2
+maximum_firing_distance = 45.0
+projectile_spawn_offset = Vector3(0, 0.9, 0)
+
+[node name="TurretCenter" parent="." instance=ExtResource("3_turret")]
+position = Vector3(0, 0.65, 0)
+scale = Vector3(0.28, 0.28, 0.28)
+speed = 0.0
+despawn_z = 1000.0
+fire_interval = 2.2
+maximum_firing_distance = 45.0
+projectile_spawn_offset = Vector3(0, 0.9, 0)
+
+[node name="TurretRight" parent="." instance=ExtResource("3_turret")]
+position = Vector3(2, 0.65, 0)
+scale = Vector3(0.28, 0.28, 0.28)
+speed = 0.0
+despawn_z = 1000.0
+fire_interval = 2.2
+maximum_firing_distance = 45.0
+projectile_spawn_offset = Vector3(0, 0.9, 0)
